@@ -1,0 +1,52 @@
+
+
+#include <Arduino.h>
+#include <FastLED.h>
+
+#include "USBMIDI.hpp"
+
+#include "LEDMIDI.hpp"
+
+
+
+void setup() {
+ // Serial.begin(115200);
+ // FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
+ // FastLED.setBrightness(BRIGHTNESS);
+
+  // Initialize the LED mappings
+   setupLEDMapping();
+
+  ////////////
+    Serial.begin(115200);
+  Serial.println("Booting up!");
+
+  // Initialize FastLED
+  FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
+  FastLED.setBrightness(BRIGHTNESS);
+
+  // Initialize all LEDs to off
+  for (int i = 0; i < NUM_LEDS; i++) {
+    leds[i] = CRGB::Black;
+  }
+  FastLED.show();
+
+  // USB setup
+#if BOARD_TYPE == ESP32S3 || BOARD_TYPE == ESP32S2
+  usbh_setup(show_config_desc_full);  // Init USB host for MIDI devices
+#endif
+}
+
+
+
+
+
+
+
+
+void loop() {
+  // Handle USB
+#if BOARD_TYPE == ESP32S3 || BOARD_TYPE == ESP32S2
+  usbh_task();
+#endif
+}

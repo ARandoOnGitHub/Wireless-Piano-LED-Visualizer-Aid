@@ -1,0 +1,98 @@
+
+#include <Arduino.h>
+#include <FastLED.h>
+
+// LED Strip Configurations
+#define LED_PIN     3         // Pin where the WS2812B is connected
+#define NUM_LEDS    144        // Number of LEDs (e.g., 88 keys of a piano)
+#define BRIGHTNESS  255       // Max brightness
+
+#define NUM_LEDS 144   // Total number of LEDs in the strip
+#define NUM_KEYS 88    // Total keys on an 88-key piano
+
+#define OCTAVE_GAP 1  // Configurable gap between octaves
+
+
+// CRGB leds[NUM_LEDS];          // Array to hold the LED states
+
+
+// // void lightUpLED(uint8_t note, uint8_t velocity);
+// // void turnOffLED(uint8_t note);
+// // Function to light up the corresponding LED for a note
+
+
+// // Helper function to determine if a note is a white key
+// bool isWhiteKey(uint8_t note) {
+//   // MIDI notes corresponding to white keys (C, D, E, F, G, A, B)
+//   int whiteNotes[] = {21, 23, 24, 26, 28, 29, 31, 33, 35, 36, 38, 40, 41, 43, 45, 47, 48, 50, 52, 53, 55, 57, 59, 60, 62, 64, 65, 67, 69, 71, 72, 74, 76, 77, 79, 81, 83, 84, 86, 88, 89, 91, 93, 95, 96, 98, 100, 101, 103, 105, 107};
+//   for (int i = 0; i < sizeof(whiteNotes) / sizeof(whiteNotes[0]); i++) {
+//     if (note == whiteNotes[i]) return true;
+//   }
+//   return false;
+// };
+// // Key LED start indices
+// int keyLEDStart[NUM_KEYS];  // Array to store the starting LED index for each key
+
+
+
+
+// uint8_t noteToColor[88]; // Array to store precomputed color values for each note
+
+// void setupLEDMapping() {
+//   int ledIndex = 0;
+//   int keyGroup = 0;
+//   int noteInGroup = 0;
+
+//   for (int note = 21; note <= 108; note++) { // Traverse from MIDI note 21 to 108 (88 keys total)
+//     keyLEDStart[note - 21] = ledIndex;
+//     noteToColor[note - 21] = map(note, 21, 108, 0, 255); // Precompute color value
+
+//     if (isWhiteKey(note)) {
+//       ledIndex += 2;  // Assign 2 LEDs to white keys
+//     } else {
+//       ledIndex += 1;  // Assign 1 LED to black keys
+//     }
+
+//     noteInGroup++;
+//     if (noteInGroup == 3) {
+//       noteInGroup = 0;
+//       keyGroup++;
+      
+//       // Add a configurable gap between octaves for better visual separation
+//       ledIndex += OCTAVE_GAP;
+//     }
+
+//     // Ensure we don't go beyond the LED strip length
+//     if (ledIndex >= NUM_LEDS) {
+//       ledIndex = NUM_LEDS - 1;  // Clamp to the last LED
+//     }
+//   }
+// };
+
+
+// void lightUpLED(uint8_t note, uint8_t velocity) {
+//   if (note < 21 || note > 108) return;  // Ignore notes outside the piano range
+
+//   int ledIndex = keyLEDStart[note - 21]; // Get the starting LED index for this note
+//   CHSV color = CHSV(noteToColor[note - 21], 255, map(velocity, 0, 127, 0, BRIGHTNESS)); // Use precomputed color value
+
+//   leds[ledIndex] = color;
+//   if (isWhiteKey(note) && ledIndex + 1 < NUM_LEDS) {
+//     leds[ledIndex + 1] = color;
+//   }
+
+//   FastLED.show();
+// };
+
+// void turnOffLED(uint8_t note) {
+//   if (note < 21 || note > 108) return; // Ignore notes outside the piano range
+
+//   int ledIndex = keyLEDStart[note - 21]; // Get the starting LED index for this note
+
+//   leds[ledIndex] = CRGB::Black;
+//   if (isWhiteKey(note) && ledIndex + 1 < NUM_LEDS) {
+//     leds[ledIndex + 1] = CRGB::Black;
+//   }
+
+//   FastLED.show();
+// };
