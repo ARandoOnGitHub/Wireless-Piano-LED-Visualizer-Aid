@@ -26,7 +26,7 @@ void setupLEDMapping() {
     } else {
       ledIndex += 1;
     }
-
+//changing the LED space between keys
     noteInGroup++;
     if (noteInGroup == 3) {
       noteInGroup = 0;

@@ -3,6 +3,11 @@
 #include "LEDHandler.hpp"
 #include "USBHandler.hpp"
 
+static void sendESP32Log(const String& message) {
+  Serial.print(message); // Print message to Serial
+}
+
+
 void setup() {
   Serial.begin(115200);
   Serial.println("Booting up!");
@@ -21,4 +26,6 @@ void setup() {
 
 void loop() {
   handleUSB();
+  // sendESP32Log();
+  // Serial.println(message);
 }

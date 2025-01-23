@@ -106,6 +106,7 @@ void usbh_task(void)
   if (err == ESP_OK) {
     if (event_flags & USB_HOST_LIB_EVENT_FLAGS_NO_CLIENTS) {
       all_clients_gone = true;
+      //all_dev_free = true;/// testing remake
     }
     if (event_flags & USB_HOST_LIB_EVENT_FLAGS_ALL_FREE) {
       all_dev_free = true;
