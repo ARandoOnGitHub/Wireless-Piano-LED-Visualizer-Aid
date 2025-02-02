@@ -1,9 +1,11 @@
 #include "MIDIHandler.hpp"
 #include "LEDHandler.hpp"
-
+#include "ESP_NOW.hpp"
 static void sendESP32Log(const String& message) {
   Serial.print(message); // Print message to Serial
 }
+
+
 
 void processMIDI(uint8_t *data, size_t length) {
   for (size_t i = 0; i < length; i += 4) {
@@ -11,10 +13,13 @@ void processMIDI(uint8_t *data, size_t length) {
     
     // Parse MIDI data (From OG Code)
     uint8_t cableNumber = data[i] & 0x0F;
-
     uint8_t statusByte = data[i + 1];
     uint8_t channel = data[i + 2];
     uint8_t value = data[i + 3];
+
+//ESP_NOW Acquiring Data
+
+ 
 
      // Format the parsed MIDI data as a string
         char midiString[50];  // Adjust the size as needed
@@ -27,6 +32,11 @@ void processMIDI(uint8_t *data, size_t length) {
         // Raw data
         Serial.println(midiString);
 
+        MidiReading.cableNumber = cableNumber;
+        MidiReading.statusByte = statusByte;
+        MidiReading.channel = channel;
+        MidiReading.value = value;
+        esp_err_t result = esp_now_send(broadcastAddress, (uint8_t*)&MidiReading, sizeof(MidiReading));
     // // Print MIDI message to serial monitor
     // Serial.print("MIDI Message: ");
     // Serial.print(statusByte, HEX);
@@ -35,7 +45,7 @@ void processMIDI(uint8_t *data, size_t length) {
     // Serial.print(" ");
     // Serial.println(value, HEX);
 
-    
+       
 
     switch (statusByte & 0xF0) {
       case 0x80: // Note Off
@@ -83,4 +93,5 @@ void processMIDI(uint8_t *data, size_t length) {
         break;
     }
   }
+  
 }

@@ -69,12 +69,17 @@ void _client_event_callback(const usb_host_client_event_msg_t *event_msg, void *
       break;
 
     case USB_HOST_CLIENT_EVENT_DEV_GONE:
+    //changed this part. Should be empty
+
       break;
 
     default:
       break;
   }
 }
+
+
+
 
 void  usbh_setup(usb_host_enum_cb_t enumeration_cb)
 {
@@ -92,7 +97,7 @@ void  usbh_setup(usb_host_enum_cb_t enumeration_cb)
     }
   };
   err = usb_host_client_register(&client_config, &Client_Handle);
-
+ 
   _USB_host_enumerate = enumeration_cb;
 }
 
@@ -106,13 +111,16 @@ void usbh_task(void)
   if (err == ESP_OK) {
     if (event_flags & USB_HOST_LIB_EVENT_FLAGS_NO_CLIENTS) {
       all_clients_gone = true;
-      //all_dev_free = true;/// testing remake
+   
     }
     if (event_flags & USB_HOST_LIB_EVENT_FLAGS_ALL_FREE) {
       all_dev_free = true;
     }
   }
   else {
+
+    
+      
     if (err != ESP_ERR_TIMEOUT) {
     }
   }
@@ -120,5 +128,11 @@ void usbh_task(void)
   err = usb_host_client_handle_events(Client_Handle, CLIENT_EVENT_TIMEOUT);
   if ((err != ESP_OK) && (err != ESP_ERR_TIMEOUT)) {
   }
+  
+
 }
+
+
+
+
 #endif
