@@ -45,3 +45,9 @@ BLEMidiServer.begin("MIDI device");
  
 
 }
+
+void scanNearby(){
+
+
+  
+}
