@@ -4,6 +4,8 @@
 #include "USBHandler.hpp"
 #include "ESP_NOW.hpp"
 #include "ESP_BLUETOOTH.hpp"
+#include "MQTTHandler.hpp"
+
 
 static void sendESP32Log(const String& message) {
   Serial.print(message); // Print message to Serial
@@ -14,19 +16,15 @@ void setup() {
   Serial.begin(115200);
   Serial.println("Booting up!");
 
-
-
-  //ESP_NOW Adress Setup
- 
- 
-
   // Serial.print("[DEFAULT] ESP32 Board MAC Address: ");
   // readMacAddress();
+  //ESP_Now setup
   initESP_NOW();
   
   // Bluetooth setup 
-
   bluetoothSetup();
+  //MQTT setup
+  setUpMqtt(); 
 
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS);
@@ -41,8 +39,9 @@ void setup() {
 }
 
 void loop() {
+  
   handleUSB();
-
+  loopMqtt();
   // sendESP32Log();
   // Serial.println(message);
 
