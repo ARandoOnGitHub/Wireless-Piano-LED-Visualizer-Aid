@@ -11,3 +11,4 @@ src/old references
 /.vscode
 /.vscode
 .vscode/extensions.json
+*.json
