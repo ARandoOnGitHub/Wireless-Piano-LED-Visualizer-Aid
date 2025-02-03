@@ -5,6 +5,9 @@
 .vscode/ipch
 
 *.txt
+*.json
 
 src/old references
 /.vscode
+/.vscode
+.vscode/extensions.json
