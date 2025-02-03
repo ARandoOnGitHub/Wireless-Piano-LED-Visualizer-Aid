@@ -5,8 +5,8 @@
 #include "ESP_NOW.hpp"
 #include "LEDHandler.hpp"
 
-const char* ssid = "MyOptimum 744650";
-const char* password = "1935-silver-84";
+const char* ssid = "WIFI";
+const char* password = "weoriuewi";
 const char* mqttServer = "broker.hivemq.com";
 const int mqttPort = 1883;
 
