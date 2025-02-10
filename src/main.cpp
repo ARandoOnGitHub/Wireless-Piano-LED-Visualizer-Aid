@@ -24,7 +24,7 @@ void setup() {
   // Bluetooth setup 
   bluetoothSetup();
   //MQTT setup
-  setUpMqtt(); 
+  // setUpMqtt(); 
 
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS);
@@ -41,7 +41,7 @@ void setup() {
 void loop() {
   
   handleUSB();
-  loopMqtt();
+  // loopMqtt();
   // sendESP32Log();
   // Serial.println(message);
 

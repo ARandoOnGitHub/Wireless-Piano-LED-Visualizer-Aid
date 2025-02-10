@@ -5,8 +5,8 @@
 
 void onNoteOn(uint8_t channel, uint8_t note, uint8_t velocity, uint16_t timestamp)
 {
-  Serial.printf("Received note on : channel %d, note %d, velocity %d (timestamp %dms)\n", channel, note, velocity, timestamp);
-  lightUpLED(note,velocity);
+  //  Serial.printf("Received note on : channel %d, note %d, velocity %d (timestamp %dms)\n", channel, note, velocity, timestamp);
+   lightUpLED(note,velocity);
 //   MidiReading.channel= note; 
 //   MidiReading.value= velocity; 
 //   esp_err_t result = esp_now_send(broadcastAddress, (uint8_t*)&MidiReading, sizeof(MidiReading));
@@ -14,7 +14,7 @@ void onNoteOn(uint8_t channel, uint8_t note, uint8_t velocity, uint16_t timestam
 
 void onNoteOff(uint8_t channel, uint8_t note, uint8_t velocity, uint16_t timestamp)
 {
-  Serial.printf("Received note off : channel %d, note %d, velocity %d (timestamp %dms)\n", channel, note, velocity, timestamp);
+  //  Serial.printf("Received note off : channel %d, note %d, velocity %d (timestamp %dms)\n", channel, note, velocity, timestamp);
   turnOffLED(note);
 
 //   MidiReading.channel= note; 
