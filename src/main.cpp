@@ -15,16 +15,15 @@ static void sendESP32Log(const String& message) {
 void setup() {
   Serial.begin(115200);
   Serial.println("Booting up!");
-
+  setupUSB();
   // Serial.print("[DEFAULT] ESP32 Board MAC Address: ");
   // readMacAddress();
   //ESP_Now setup
-  initESP_NOW();
+  //  initESP_NOW();
   
   // Bluetooth setup 
   bluetoothSetup();
-  //MQTT setup
-  setUpMqtt(); 
+
 
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS);
@@ -35,7 +34,10 @@ void setup() {
   FastLED.show();
 
   setupLEDMapping();
-  setupUSB();
+  
+  //MQTT setup
+  setUpMqtt(); 
+  
 }
 
 void loop() {

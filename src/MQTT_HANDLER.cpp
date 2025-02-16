@@ -9,10 +9,12 @@ const char* ssid = "MyOptimum 744650";
 const char* password = "1935-silver-84";
 const char* mqttServer = "broker.hivemq.com";
 const int mqttPort = 1883;
+char clientID[30];
 
 WiFiClient espClient;
 PubSubClient client(espClient);
 
+  struct_MQTT midiReadingMqtt; 
 
 void setupWiFi() {
   delay(10);
@@ -29,70 +31,66 @@ void setupWiFi() {
 void reconnect() {
   while (!client.connected()) {
     Serial.print("Connecting to MQTT broker...");
-    if (client.connect("ESP32_Test_Client")) {
+
+    uint32_t chipId = ESP.getEfuseMac() & 0xFFFFFF;  // Get part of the MAC address
+    snprintf(clientID, sizeof(clientID), "ESP32_Client_%06X", chipId);
+
+    if (client.connect(clientID)) {
       Serial.println("Connected!");
-      client.subscribe("test/topic");  // Subscribe to test topic
+       //client.subscribe("midi/topic",0);  
+         client.subscribe("test/topic",0); // Subscribe to test topic
     } else {
       Serial.print("Failed, rc=");
       Serial.print(client.state());
-      delay(5000);
+      delay(1000);
     }
   }
 }
 
 // Publish Simple Message 
-void publishMessage() {
-  String message = "Bread is Nice with butter";
-  client.publish("test/topic", message.c_str());
-  Serial.println("Published: " + message);
+void publishMIDI(String MidiMessage) {
+  
+  client.publish("midi/topic", MidiMessage.c_str(),false);
+   //client.publish("test/topic", MidiMessage.c_str(),false);
+  Serial.println("Published: " + String(MidiMessage));
+ 
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
+ 
   Serial.print("Message arrived [");
   Serial.print(topic);
   Serial.print("]: ");
 
-  String midiString = "";
-  for (int i = 0; i < length; i++) {
-    midiString += (char)payload[i];
-  }
+  // Use a fixed-size buffer instead of String
+  char midiBuffer[50];  
+  memcpy(midiBuffer, payload, length);
+  midiBuffer[length] = '\0';  // Null-terminate
 
+  // Serial.println(midiBuffer);  // Debugging output
 
-  // Parse midiString
-  uint8_t cableNumber = midiString.substring(2, 3).toInt();  // Extract cable number
-  uint8_t channel = midiString.substring(midiString.indexOf("channel: ") + 9, midiString.indexOf("value:") - 1).toInt();
-  uint8_t value = midiString.substring(midiString.indexOf("value: ") + 7).toInt();
+  // Variables to store extracted values
+  int midiChannel = 0, noteNumber = 0, velocity = 0;
+  char noteStatus[10];  // Holds "On" or "Off"
 
-  String status = "";
-  if (midiString.indexOf("Note On") != -1) {
-    status = "Note On";
-  } else if (midiString.indexOf("Note Off") != -1) {
-    status = "Note Off";
-  } else if (midiString.indexOf("Control Change") != -1) {
-    status = "Control Change";
+  // Corrected sscanf format
+  if (sscanf(midiBuffer, "Ch%d Note %s Channel: %d Value: %d", &midiChannel, noteStatus, &noteNumber, &velocity) == 4) {
+      Serial.printf(" Parsed Successfully - MIDI Channel: %d, Note: %d, Value: %d, Status: %s\n",
+                    midiChannel, noteNumber, velocity, noteStatus);
+
+      // Update struct
+      midiReadingMqtt.Channel = midiChannel;
+      midiReadingMqtt.Value = velocity;
+      midiReadingMqtt.StatusByte = (strcmp(noteStatus, "On") == 0) ? 0x90 : 0x80;
+
+      // Process LEDs
+      if (strcmp(noteStatus, "On") == 0 && velocity > 0) {
+          lightUpLED(noteNumber, velocity);
+      } else if (strcmp(noteStatus, "Off") == 0 || (strcmp(noteStatus, "On") == 0 && velocity == 0)) {
+          turnOffLED(noteNumber);
+      }
   } else {
-    status = "Other";
-  }
-
-  // Update struct and process
-  MidiReading.channel = channel;
-  MidiReading.value = value;
-  MidiReading.statusByte = (status == "Note On") ? 0x90 : (status == "Note Off") ? 0x80 : 0xB0;
-  MidiReading.cableNumber = cableNumber;
-
-  // Print parsed data
-  Serial.print("Parsed - channel: ");
-  Serial.print(channel);
-  Serial.print(", value: ");
-  Serial.print(value);
-  Serial.print(", Status: ");
-  Serial.println(status);
-
-  // Process LEDs based on note on/off
-  if (status == "Note On" && value > 0) {
-    lightUpLED(channel, value);
-  } else if (status == "Note Off" || (status == "Note On" && value == 0)) {
-    turnOffLED(channel);
+      Serial.println(" Parsing failed! Check message format.");
   }
 }
 
@@ -105,6 +103,7 @@ void setUpMqtt(){
   client.setCallback(callback);
 
 }
+
 
 void loopMqtt(){
 

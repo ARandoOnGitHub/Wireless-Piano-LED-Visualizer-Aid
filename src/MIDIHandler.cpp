@@ -1,6 +1,9 @@
 #include "MIDIHandler.hpp"
 #include "LEDHandler.hpp"
 #include "ESP_NOW.hpp"
+#include "MQTTHandler.hpp"
+
+
 static void sendESP32Log(const String& message) {
   Serial.print(message); // Print message to Serial
 }
@@ -36,7 +39,14 @@ void processMIDI(uint8_t *data, size_t length) {
         MidiReading.statusByte = statusByte;
         MidiReading.channel = channel;
         MidiReading.value = value;
-        esp_err_t result = esp_now_send(broadcastAddress, (uint8_t*)&MidiReading, sizeof(MidiReading));
+
+
+
+        // esp_err_t result = esp_now_send(broadcastAddress, (uint8_t*)&MidiReading, sizeof(MidiReading));
+           publishMIDI(midiString); 
+        
+        
+        
     // // Print MIDI message to serial monitor
     // Serial.print("MIDI Message: ");
     // Serial.print(statusByte, HEX);
