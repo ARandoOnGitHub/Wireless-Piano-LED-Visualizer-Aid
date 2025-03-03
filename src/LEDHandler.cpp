@@ -37,7 +37,7 @@ void setupLEDMapping() {
     if (ledIndex >= NUM_LEDS) {
       ledIndex = NUM_LEDS - 1;
     }
-  }\]
+  }
 }
 
 void lightUpLED(uint8_t note, uint8_t velocity) {
