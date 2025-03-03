@@ -35,15 +35,15 @@ void processMIDI(uint8_t *data, size_t length) {
         // Raw data
         Serial.println(midiString);
 
-        MidiReading.cableNumber = cableNumber;
+        // MidiReading.cableNumber = cableNumber;
         MidiReading.statusByte = statusByte;
         MidiReading.channel = channel;
         MidiReading.value = value;
 
 
 
-        // esp_err_t result = esp_now_send(broadcastAddress, (uint8_t*)&MidiReading, sizeof(MidiReading));
-           publishMIDI(midiString); 
+         esp_err_t result = esp_now_send(0, (uint8_t*)&MidiReading, sizeof(MidiReading));
+       
         
         
         

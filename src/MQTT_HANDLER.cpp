@@ -37,8 +37,8 @@ void reconnect() {
 
     if (client.connect(clientID)) {
       Serial.println("Connected!");
-       //client.subscribe("midi/topic",0);  
-         client.subscribe("test/topic",0); // Subscribe to test topic
+        client.subscribe("midi/topic",0);  
+        //  client.subscribe("test/topic",0); // Subscribe to test topic
     } else {
       Serial.print("Failed, rc=");
       Serial.print(client.state());
@@ -50,8 +50,8 @@ void reconnect() {
 // Publish Simple Message 
 void publishMIDI(String MidiMessage) {
   
-  client.publish("midi/topic", MidiMessage.c_str(),false);
-   //client.publish("test/topic", MidiMessage.c_str(),false);
+ // client.publish("midi/topic", MidiMessage.c_str(),false);
+   client.publish("test/topic", MidiMessage.c_str(),false);
   Serial.println("Published: " + String(MidiMessage));
  
 }
@@ -100,7 +100,7 @@ void setUpMqtt(){
 
  setupWiFi();
   client.setServer(mqttServer, mqttPort);
-  client.setCallback(callback);
+ client.setCallback(callback);
 
 }
 

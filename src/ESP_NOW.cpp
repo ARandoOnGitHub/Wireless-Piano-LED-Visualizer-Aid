@@ -14,7 +14,11 @@ uint8_t baseMac[6];
 
 }
 
-uint8_t broadcastAddress[] = {0xa0, 0x85, 0xe3, 0xe7, 0x4b, 0x68};
+uint8_t broadcastAddress[] = {0xa0, 0x85, 0xe3, 0xe7, 0x4b, 0x68}; //Master Device
+uint8_t broadcastAddress1[] = {0xa0, 0x85, 0xe3, 0xe6, 0x56, 0x1c};
+uint8_t broadcastAddress2[] = {0x48, 0xca, 0x43, 0xaf, 0x28, 0x2c};
+uint8_t broadcastAddress3[] = {0xa0, 0x85, 0xe3, 0xe7, 0x55, 0xe8};
+
  struct_message MidiReading;
 // typedef struct struct_message{
 
@@ -42,17 +46,23 @@ uint8_t broadcastAddress[] = {0xa0, 0x85, 0xe3, 0xe7, 0x4b, 0x68};
 
 
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
-  Serial.print("\r\nLast Packet Send Status:\t");
+  char macStr[18];
+  Serial.print("Packet from: ");
+  // Copies the sender mac address to a string
+  snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x",
+           mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5]);
+  Serial.print(macStr);
+  Serial.print(" send status:\t");
   Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Success" : "Delivery Fail");
 }
 
 void onDataReceive(const uint8_t *mac_addr, const uint8_t *data, int len) {
 
 
-    // Copy received data into MidiReading struct
+  
     memcpy(&MidiReading, data, sizeof(MidiReading));
 
-    // Extract actual status (message type) and MIDI channel
+   
    
    
 
@@ -73,7 +83,7 @@ void onDataReceive(const uint8_t *mac_addr, const uint8_t *data, int len) {
             }
             break;
 
-        case 0xB0: // Control Change
+        case 0xB0:
             switch (MidiReading.channel) {
                 case 64: // Sustain Pedal
                      Serial.println("USB MIDI IN: Sustain Pedal CC " + String(MidiReading.channel) + " Velocity: " + String(MidiReading.value));
@@ -94,9 +104,22 @@ void onDataReceive(const uint8_t *mac_addr, const uint8_t *data, int len) {
 }
 
 
+void addPeer(const uint8_t *peerAddr) {
+  esp_now_peer_info_t newPeer = {};
+  memcpy(newPeer.peer_addr, peerAddr, 6);
+  newPeer.channel = 0;
+  newPeer.encrypt = false;
+
+  if (esp_now_add_peer(&newPeer) != ESP_OK) {
+      Serial.println("Failed to add peer");
+  } else {
+      Serial.println("Peer added successfully");
+  }
+}
 void initESP_NOW(){
   
-    WiFi.mode(WIFI_STA);
+  WiFi.mode(WIFI_STA);
+  
 
      if (esp_now_init() != ESP_OK) {
     Serial.println("Error initializing ESP-NOW");
@@ -106,14 +129,12 @@ void initESP_NOW(){
   esp_now_register_send_cb(OnDataSent);
 
   // Set up a peer device (receiver's MAC address required)
-  memcpy(peerInfo.peer_addr, broadcastAddress, 6);  // You'll need to set receiver's MAC address
-  peerInfo.channel = 0;  // Default channel
-  peerInfo.encrypt = false;
-
-  if (esp_now_add_peer(&peerInfo) != ESP_OK) {
-    Serial.println("Failed to add peer");
-    return;
-  }
+  //Number 1 Peer
+  
+  // addPeer(broadcastAddress);
+  addPeer(broadcastAddress1);
+  addPeer(broadcastAddress2);
+  addPeer(broadcastAddress3);
 
    
 }
