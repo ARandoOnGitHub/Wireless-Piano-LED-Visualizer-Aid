@@ -15,6 +15,7 @@ static void sendESP32Log(const String& message) {
 void setup() {
   Serial.begin(115200);
   Serial.println("Booting up!");
+  
   setupUSB();
   // Serial.print("[DEFAULT] ESP32 Board MAC Address: ");
 

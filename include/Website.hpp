@@ -5,6 +5,7 @@
 #include <WiFi.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
+#include <WebSockets.h>
 
 String processor(const String& var);
 
