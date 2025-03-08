@@ -6,6 +6,8 @@
 #include "ESP_BLUETOOTH.hpp"
 #include "MQTTHandler.hpp"
 
+bool usbHandled = false;
+bool usbSetup=false; 
 
 static void sendESP32Log(const String& message) {
   Serial.print(message); // Print message to Serial
@@ -15,13 +17,14 @@ static void sendESP32Log(const String& message) {
 void setup() {
   Serial.begin(115200);
   Serial.println("Booting up!");
-  
+
   setupUSB();
+
   // Serial.print("[DEFAULT] ESP32 Board MAC Address: ");
 
   //ESP_Now setup
-   initESP_NOW();
-   readMacAddress();
+  //  initESP_NOW();
+  //  readMacAddress();
   // Bluetooth setup 
   bluetoothSetup();
 
@@ -37,14 +40,18 @@ void setup() {
   setupLEDMapping();
   
   //MQTT setup
-  // setUpMqtt(); 
+   setUpMqtt(); 
   
 }
 
 void loop() {
   
-  handleUSB();
-  // loopMqtt();
+
+    handleUSB();  // Run this once before MQTT starts
+  // Adjust delay time as needed
+ 
+
+   loopMqtt();
   // sendESP32Log();
   // Serial.println(message);
 
