@@ -1,7 +1,10 @@
 #include "Website.hpp"
+#include "LEDHandler.hpp"
+#include "MQTTHandler.hpp"
+
 // Replace with your network credentials
-const char* SSID = "REPLACE_WITH_YOUR_SSID";
-const char* PASSword = "REPLACE_WITH_YOUR_PASSWORD";
+//const char* SSID = "DJ";
+//const char* PASSword = "daejung123";
 
 const char* PARAM_INPUT_1 = "output";
 const char* PARAM_INPUT_2 = "state";
@@ -12,7 +15,7 @@ AsyncWebServer server(80);
 const char index_html[] PROGMEM = R"rawliteral(
 <!DOCTYPE HTML><html>
 <head>
-  <title>ESP Web Server</title>
+  <title>Piano Visializer Controller</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="data:,">
   <style>
@@ -29,7 +32,7 @@ const char index_html[] PROGMEM = R"rawliteral(
   </style>
 </head>
 <body>
-  <h2>ESP Web Server</h2>
+  <h2>Piano Visualizer Controller</h2>
   %BUTTONPLACEHOLDER%
 <script>function toggleCheckbox(element) {
   var xhr = new XMLHttpRequest();
@@ -47,9 +50,9 @@ String processor(const String& var){
     //Serial.println(var);
     if(var == "BUTTONPLACEHOLDER"){
       String buttons = "";
-      buttons += "<h4>Output - GPIO 2</h4><label class=\"switch\"><input type=\"checkbox\" onchange=\"toggleCheckbox(this)\" id=\"2\" " + outputState(2) + "><span class=\"slider\"></span></label>";
-      buttons += "<h4>Output - GPIO 4</h4><label class=\"switch\"><input type=\"checkbox\" onchange=\"toggleCheckbox(this)\" id=\"4\" " + outputState(4) + "><span class=\"slider\"></span></label>";
-      buttons += "<h4>Output - GPIO 33</h4><label class=\"switch\"><input type=\"checkbox\" onchange=\"toggleCheckbox(this)\" id=\"33\" " + outputState(33) + "><span class=\"slider\"></span></label>";
+      buttons += "<h4>Turn On LEDs</h4><label class=\"switch\"><input type=\"checkbox\" onchange=\"toggleCheckbox(this)\" id=\"2\" " + outputState(2) + "><span class=\"slider\"></span></label>";
+      buttons += "<h4>Turn on Bluetooth</h4><label class=\"switch\"><input type=\"checkbox\" onchange=\"toggleCheckbox(this)\" id=\"4\" " + outputState(4) + "><span class=\"slider\"></span></label>";
+      buttons += "<h4>Connect to Piano(s)</h4><label class=\"switch\"><input type=\"checkbox\" onchange=\"toggleCheckbox(this)\" id=\"33\" " + outputState(33) + "><span class=\"slider\"></span></label>";
       return buttons;
     }
     return String();
@@ -65,21 +68,20 @@ String outputState(int output){
 }
 
 void WebsiteSetup() {
-    // Serial port for debugging purposes
-
+  
   pinMode(2, OUTPUT);
   digitalWrite(2, LOW);
   pinMode(4, OUTPUT);
   digitalWrite(4, LOW);
   pinMode(33, OUTPUT);
   digitalWrite(33, LOW);
-  
+
   // Connect to Wi-Fi
-  WiFi.begin(SSID, PASSword);
+  /*WiFi.begin(SSID, PASSword);
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
     Serial.println("Connecting to WiFi..");
-  }
+  }*/
 
   // Print ESP Local IP Address
   Serial.println(WiFi.localIP());
@@ -98,6 +100,21 @@ void WebsiteSetup() {
       inputMessage1 = request->getParam(PARAM_INPUT_1)->value();
       inputMessage2 = request->getParam(PARAM_INPUT_2)->value();
       digitalWrite(inputMessage1.toInt(), inputMessage2.toInt());
+      
+      int pin = inputMessage1.toInt();
+      int state = inputMessage2.toInt();
+
+      if (pin == 2) {  // If "Turn On LEDs" button was toggled
+          if (state == 1) {
+              // Turn on LEDs (example: turn on middle C note, velocity max)
+              lightUpLED(60, 127);
+          } else {
+              // Turn off LED
+              turnOffLED(60);
+          }
+      } else {
+          digitalWrite(pin, state);
+      }
     }
     else {
       inputMessage1 = "No message sent";

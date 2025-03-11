@@ -5,6 +5,8 @@
 #include "ESP_NOW.hpp"
 #include "LEDHandler.hpp"
 
+#include <WiFiManager.h>
+
 const char* ssid = "MyOptimum 744650";
 const char* password = "1935-silver-84";
 const char* mqttServer = "test.mosquitto.org";  //other broker: test.mosquitto.org, broker.emqx.io, 	broker.hivemq.com
@@ -19,8 +21,12 @@ PubSubClient client(espClient);
 void setupWiFi() {
   delay(10);
   Serial.println("Connecting to WiFi...");
-  WiFi.begin(ssid, password);
-  Serial.println(ssid);
+  //WiFi.begin(ssid, password);
+  WiFiManager wifiManager;
+  wifiManager.autoConnect("AutoConnectAP");
+  Serial.println("Connected to WiFi!");
+
+  //Serial.println(ssid);
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
     Serial.println("Connecting...");

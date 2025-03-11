@@ -14,6 +14,3 @@ String outputState(int output);
 void WebsiteSetup();
 
 #endif 
-
-
-

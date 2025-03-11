@@ -5,6 +5,7 @@
 #include "ESP_NOW.hpp"
 #include "ESP_BLUETOOTH.hpp"
 #include "MQTTHandler.hpp"
+#include "Website.hpp"
 
 bool usbHandled = false;
 bool usbSetup=false; 
@@ -27,7 +28,7 @@ void setup() {
   //  readMacAddress();
   // Bluetooth setup 
   bluetoothSetup();
-
+  //WebsiteSetup();
 
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS);
@@ -38,10 +39,9 @@ void setup() {
   FastLED.show();
 
   setupLEDMapping();
-  
   //MQTT setup
    setUpMqtt(); 
-  
+  WebsiteSetup();
 }
 
 void loop() {
