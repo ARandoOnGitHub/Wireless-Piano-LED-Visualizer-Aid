@@ -5,6 +5,7 @@
 // Replace with your network credentials
 //const char* SSID = "DJ";
 //const char* PASSword = "daejung123";
+//Hanna -w- Here
 
 const char* PARAM_INPUT_1 = "output";
 const char* PARAM_INPUT_2 = "state";
@@ -15,7 +16,7 @@ AsyncWebServer server(80);
 const char index_html[] PROGMEM = R"rawliteral(
 <!DOCTYPE HTML><html>
 <head>
-  <title>Piano Visializer Controller</title>
+  <title>Piano Viializer Controller</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="data:,">
   <style>
