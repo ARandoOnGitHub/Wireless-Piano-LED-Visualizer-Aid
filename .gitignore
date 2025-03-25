@@ -17,3 +17,5 @@ src/old references
 .vscode/extensions.json
 *.json
 >>>>>>> USB-MIDI-Visualization
+.vscode/extensions.json
+.vscode/settings.json
