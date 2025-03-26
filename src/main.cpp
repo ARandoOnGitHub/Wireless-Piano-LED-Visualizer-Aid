@@ -24,11 +24,11 @@ void setup() {
   // Serial.print("[DEFAULT] ESP32 Board MAC Address: ");
 
   //ESP_Now setup
-  //  initESP_NOW();
-  //  readMacAddress();
+   initESP_NOW();
+   readMacAddress();
   // Bluetooth setup 
   bluetoothSetup();
-  //WebsiteSetup();
+  // WebsiteSetup();
 
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS);
@@ -40,21 +40,16 @@ void setup() {
 
   setupLEDMapping();
   //MQTT setup
-   setUpMqtt(); 
-  WebsiteSetup();
+    // setUpMqtt(); 
+
 }
 
 void loop() {
   
-
-    handleUSB();  // Run this once before MQTT starts
-  // Adjust delay time as needed
+    handleUSB();
  
 
-   loopMqtt();
+  //  loopMqtt();
   // sendESP32Log();
   // Serial.println(message);
-
-
-
 }

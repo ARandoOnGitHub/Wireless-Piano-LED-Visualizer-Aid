@@ -1,5 +1,6 @@
 #include "ESP_NOW.hpp"
 #include "LEDHandler.hpp"
+
 void readMacAddress(){
 
 uint8_t baseMac[6];
@@ -132,8 +133,8 @@ void initESP_NOW(){
   //Number 1 Peer
   
   // addPeer(broadcastAddress);
-  addPeer(broadcastAddress1);
-  addPeer(broadcastAddress2);
+  // addPeer(broadcastAddress1);
+  // addPeer(broadcastAddress2);
   addPeer(broadcastAddress3);
 
    

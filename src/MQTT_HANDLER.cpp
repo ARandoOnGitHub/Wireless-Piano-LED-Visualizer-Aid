@@ -57,7 +57,7 @@ void reconnect() {
 void publishMIDI(String MidiMessage) {
   
  client.publish("midi/topic", MidiMessage.c_str(),false);
-  // client.publish("test/topic", MidiMessage.c_str(),false);
+ // client.publish("test/topic", MidiMessage.c_str(),false);
   Serial.println("Published: " + String(MidiMessage));
  
 }
