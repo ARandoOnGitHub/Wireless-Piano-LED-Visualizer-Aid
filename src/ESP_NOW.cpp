@@ -1,6 +1,10 @@
 #include "ESP_NOW.hpp"
 #include "LEDHandler.hpp"
 
+unsigned long startTime_ESP;
+unsigned long receiveTime_ESP;
+unsigned long currentTime_ESP;
+
 void readMacAddress(){
 
 uint8_t baseMac[6];
@@ -47,20 +51,23 @@ uint8_t broadcastAddress3[] = {0x24, 0xec, 0x4a, 0x38, 0xeb, 0x24};
 
 
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
+  startTime_ESP=millis();
   char macStr[18];
   Serial.print("Packet from: ");
+
   // Copies the sender mac address to a string
   snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x",
            mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5]);
   Serial.print(macStr);
   Serial.print(" send status:\t");
   Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Success" : "Delivery Fail");
+  Serial.print("Time Sent: "); 
+  Serial.println(startTime_ESP);
 }
 
 void onDataReceive(const uint8_t *mac_addr, const uint8_t *data, int len) {
-
-
-  
+  currentTime_ESP=millis();
+  receiveTime_ESP=millis();
     memcpy(&MidiReading, data, sizeof(MidiReading));
 
    
@@ -78,9 +85,15 @@ void onDataReceive(const uint8_t *mac_addr, const uint8_t *data, int len) {
                 // MIDI standard treats Note On with velocity 0 as Note Off
                 Serial.println("USB MIDI IN: NOTE OFF Pitch: " + String(MidiReading.channel) + " Velocity: " + String(MidiReading.value));
                  turnOffLED(MidiReading.channel);
+                 Serial.printf("Time Received: "); 
+                 Serial.println(receiveTime_ESP);
+
             } else {
                  Serial.println("USB MIDI IN: NOTE ON Pitch: " + String(MidiReading.channel) + " Velocity: " + String(MidiReading.value));
                 lightUpLED(MidiReading.channel, MidiReading.value);
+                Serial.printf("Time Received: "); 
+                Serial.println(receiveTime_ESP);
+             
             }
             break;
 
@@ -102,6 +115,7 @@ void onDataReceive(const uint8_t *mac_addr, const uint8_t *data, int len) {
         break;
       
     }
+    receiveTime_ESP=currentTime_ESP;
 }
 
 

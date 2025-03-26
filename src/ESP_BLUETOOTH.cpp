@@ -3,25 +3,38 @@
 #include "ESP_NOW.hpp"
 #include "MQTTHandler.hpp"
 // Work On sending info to ESP_NOW Protocol
+unsigned long startTime;
+unsigned long currentTime;
 
 void onNoteOn(uint8_t channel, uint8_t note, uint8_t velocity, uint16_t timestamp)
 {
+  startTime=millis();
   Serial.printf("Received note on : channel %d, note %d, velocity %d (timestamp %dms)\n", channel, note, velocity, timestamp);
-  lightUpLED(note,velocity);
-   MidiReading.channel= note; 
-   MidiReading.value= velocity; 
-   esp_err_t result = esp_now_send(0, (uint8_t*)&MidiReading, sizeof(MidiReading));
+  lightUpLED(note,velocity); 
+  Serial.printf("Start Time Start: ");
+  Serial.println(startTime);
+  //  MidiReading.channel= note; 
+  //  MidiReading.value= velocity; 
+  //  esp_err_t result = esp_now_send(0, (uint8_t*)&MidiReading, sizeof(MidiReading));
+  
 
 }
 
 void onNoteOff(uint8_t channel, uint8_t note, uint8_t velocity, uint16_t timestamp)
 {
+  currentTime=millis();
   Serial.printf("Received note off : channel %d, note %d, velocity %d (timestamp %dms)\n", channel, note, velocity, timestamp);
   turnOffLED(note);
- 
+  Serial.printf("Time Stamp: ");
+  Serial.println(currentTime);
+  unsigned long delay= currentTime-startTime; 
+  Serial.printf("Delay: ");
+  Serial.println(delay);
 
-    MidiReading.channel= note; 
-   esp_err_t result = esp_now_send(0, (uint8_t*)&MidiReading, sizeof(MidiReading));
+  startTime=currentTime;
+
+  //   MidiReading.channel= note; 
+  //  esp_err_t result = esp_now_send(0, (uint8_t*)&MidiReading, sizeof(MidiReading));
 }
 
 void onControlChange(uint8_t channel, uint8_t controller, uint8_t value, uint16_t timestamp)
