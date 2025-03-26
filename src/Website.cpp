@@ -5,7 +5,6 @@
 // Replace with your network credentials HERE ->
 const char* SSID = "DJ";
 const char* PASSword = "daejung123";
-//Hanna -w- Here
 
 const char* PARAM_INPUT_1 = "output";
 const char* PARAM_INPUT_2 = "state";
@@ -157,15 +156,15 @@ String processor(const String& var){
     return String();
   }
 
-String outputState(int output){
-  if(digitalRead(output)){
-    return "checked";
+  String outputState(int output){
+    if(digitalRead(output)){
+      return "checked";
+    }
+    else {
+      return "";
+    }
   }
-  else {
-    return "";
-  }
-}
-
+  
 void WebsiteSetup() {
   
   pinMode(2, OUTPUT);
@@ -187,7 +186,8 @@ void WebsiteSetup() {
 
   // Route for root / web page
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "text/html", index_html, processor);
+    //request->send_P(200, "text/html", index_html, processor);
+    request->send(200, "text/html", index_html);
   });
 
   // Send a GET request to <ESP_IP>/update?output=<inputMessage1>&state=<inputMessage2>
