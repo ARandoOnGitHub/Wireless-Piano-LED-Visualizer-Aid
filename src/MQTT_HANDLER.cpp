@@ -5,7 +5,6 @@
 #include "ESP_NOW.hpp"
 #include "LEDHandler.hpp"
 
-#include <WiFiManager.h>
 
 const char* ssid = "MyOptimum 744650";
 const char* password = "1935-silver-84";
@@ -22,9 +21,6 @@ void setupWiFi() {
   delay(10);
   Serial.println("Connecting to WiFi...");
   //WiFi.begin(ssid, password);
-  WiFiManager wifiManager;
-  wifiManager.autoConnect("AutoConnectAP");
-  Serial.println("Connected to WiFi!");
 
   //Serial.println(ssid);
   while (WiFi.status() != WL_CONNECTED) {
@@ -104,7 +100,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 void setUpMqtt(){
 
- setupWiFi();
+  setupWiFi();
   client.setServer(mqttServer, mqttPort);
  client.setCallback(callback);
 

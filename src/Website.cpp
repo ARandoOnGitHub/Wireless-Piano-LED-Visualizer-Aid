@@ -1,10 +1,10 @@
 #include "Website.hpp"
 #include "LEDHandler.hpp"
-#include "MQTTHandler.hpp"
 
-// Replace with your network credentials
-//const char* SSID = "DJ";
-//const char* PASSword = "daejung123";
+
+// Replace with your network credentials HERE ->
+const char* SSID = "DJ";
+const char* PASSword = "daejung123";
 //Hanna -w- Here
 
 const char* PARAM_INPUT_1 = "output";
@@ -176,11 +176,11 @@ void WebsiteSetup() {
   digitalWrite(33, LOW);
 
   // Connect to Wi-Fi
-  /*WiFi.begin(SSID, PASSword);
+  WiFi.begin(SSID, PASSword);
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
     Serial.println("Connecting to WiFi..");
-  }*/
+  }
 
   // Print ESP Local IP Address
   Serial.println(WiFi.localIP());
@@ -229,3 +229,4 @@ void WebsiteSetup() {
   // Start server
   server.begin();
 }
+
