@@ -28,7 +28,7 @@ void setup() {
    readMacAddress();
   // Bluetooth setup 
   bluetoothSetup();
-// WebsiteSetup();
+  WebsiteSetup();
 
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS);

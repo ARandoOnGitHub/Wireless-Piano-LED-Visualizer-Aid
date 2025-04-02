@@ -3,8 +3,8 @@
 
 
 // Replace with your network credentials HERE ->
-const char* SSID = "DJ";
-const char* PASSword = "daejung123";
+const char* SSID = "";
+const char* PASSword = "";
 
 const char* PARAM_INPUT_1 = "output";
 const char* PARAM_INPUT_2 = "state";
@@ -180,15 +180,14 @@ void WebsiteSetup() {
     delay(1000);
     Serial.println("Connecting to WiFi..");
   }
-
+  Serial.println("Connected!");
   // Print ESP Local IP Address
   Serial.println(WiFi.localIP());
-
   // Route for root / web page
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     //request->send_P(200, "text/html", index_html, processor);
     request->send(200, "text/html", index_html);
-  });
+    });
 
   // Send a GET request to <ESP_IP>/update?output=<inputMessage1>&state=<inputMessage2>
   server.on("/update", HTTP_GET, [] (AsyncWebServerRequest *request) {
@@ -227,6 +226,8 @@ void WebsiteSetup() {
   });
 
   // Start server
+  Serial.println("Starting web server...");
   server.begin();
+  Serial.println("Web server started!");
 }
 
