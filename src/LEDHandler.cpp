@@ -4,6 +4,7 @@ CRGB leds[NUM_LEDS];
 int keyLEDStart[NUM_KEYS];
 uint8_t noteToColor[88];
 
+
 bool isWhiteKey(uint8_t note) {
   int whiteNotes[] = {21, 23, 24, 26, 28, 29, 31, 33, 35, 36, 38, 40, 41, 43, 45, 47, 48, 50, 52, 53, 55, 57, 59, 60, 62, 64, 65, 67, 69, 71, 72, 74, 76, 77, 79, 81, 83, 84, 86, 88, 89, 91, 93, 95, 96, 98, 100, 101, 103, 105, 107};
   for (int i = 0; i < sizeof(whiteNotes) / sizeof(whiteNotes[0]); i++) {
@@ -40,12 +41,14 @@ void setupLEDMapping() {
   }
 }
 
+
 void lightUpLED(uint8_t note, uint8_t velocity) {
   if (note < 21 || note > 108) return;
 
   int ledIndex = keyLEDStart[note - 21];
-  CHSV color = CHSV(noteToColor[note - 21], 255, map(velocity, 0, 127, 0, BRIGHTNESS));
-
+  //Original LED color
+  // CHSV color = CHSV(noteToColor[note - 21], 255, map(velocity, 0, 127, 0, BRIGHTNESS));
+  CHSV color = CHSV(currentHue, 255, map(velocity, 0, 127, 0, currentBrightness));
   leds[ledIndex] = color;
   if (isWhiteKey(note) && ledIndex + 1 < NUM_LEDS) {
     leds[ledIndex + 1] = color;

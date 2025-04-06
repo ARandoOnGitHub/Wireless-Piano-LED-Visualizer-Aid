@@ -7,6 +7,7 @@
 #include "MQTTHandler.hpp"
 #include "Website.hpp"
 
+
 bool usbHandled = false;
 bool usbSetup=false; 
 
@@ -24,7 +25,7 @@ void setup() {
   // Serial.print("[DEFAULT] ESP32 Board MAC Address: ");
   // setupAP();
   //ESP_Now setup
-   initESP_NOW();
+    initESP_NOW();
    readMacAddress();
   // Bluetooth setup 
   bluetoothSetup();

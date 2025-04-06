@@ -22,7 +22,7 @@ typedef  struct struct_message {
 // Declare a global instance to be shared
 extern struct_message MidiReading;
 
-void readMacAddress(); 
+String readMacAddress(); 
 void onDataSent(const uint8_t *mac_addr, esp_now_send_status_t status); 
 void onDataReceive(const uint8_t *mac_addr, const uint8_t *data, int len);
 void sendMidiData();

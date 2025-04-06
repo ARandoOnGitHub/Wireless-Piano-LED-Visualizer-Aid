@@ -15,8 +15,13 @@ extern CRGB leds[NUM_LEDS];
 extern int keyLEDStart[NUM_KEYS];
 extern uint8_t noteToColor[88];
 
+extern uint8_t currentHue;
+extern uint8_t currentBrightness;
+
+
 void setupLEDMapping();
 void lightUpLED(uint8_t note, uint8_t velocity);
 void turnOffLED(uint8_t note);
+
 
 #endif // LEDHANDLER_HPP

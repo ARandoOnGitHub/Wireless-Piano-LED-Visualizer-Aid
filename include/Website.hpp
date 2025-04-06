@@ -3,14 +3,15 @@
 
 #include <Arduino.h>
 // Import required libraries
+#include <WiFiManager.h>
 #include <WiFi.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include <WebSockets.h>
-// #include <WiFiManager.h>
-// #include <HTTPClient.h>
-// #include <http_parser.h>
+#include <ESPmDNS.h>
 
+
+String scanNearbyDevices();
 String processor(const String& var);
 
 String outputState(int output);

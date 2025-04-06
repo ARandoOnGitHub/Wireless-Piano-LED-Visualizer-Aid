@@ -5,24 +5,26 @@ unsigned long startTime_ESP;
 unsigned long receiveTime_ESP;
 unsigned long currentTime_ESP;
 
-void readMacAddress(){
-
-uint8_t baseMac[6];
+String readMacAddress() {
+  uint8_t baseMac[6];
   esp_err_t ret = esp_wifi_get_mac(WIFI_IF_STA, baseMac);
   if (ret == ESP_OK) {
-    Serial.printf("%02x:%02x:%02x:%02x:%02x:%02x\n",
-                  baseMac[0], baseMac[1], baseMac[2],
-                  baseMac[3], baseMac[4], baseMac[5]);
+    char macStr[18];
+    snprintf(macStr, sizeof(macStr),
+             "%02X:%02X:%02X:%02X:%02X:%02X",
+             baseMac[0], baseMac[1], baseMac[2],
+             baseMac[3], baseMac[4], baseMac[5]);
+    return String(macStr);
   } else {
-    Serial.println("Failed to read MAC adadress");
-  } 
-
+    return "Error";
+  }
 }
 
-uint8_t broadcastAddress[] = {0xa0, 0x85, 0xe3, 0xe7, 0x4b, 0x68}; //Master Device
-uint8_t broadcastAddress1[] = {0xa0, 0x85, 0xe3, 0xe6, 0x56, 0x1c};
-uint8_t broadcastAddress2[] = {0xa0, 0x85, 0xe3, 0xe0, 0xa2, 0x88};
-uint8_t broadcastAddress3[] = {0x24, 0xec, 0x4a, 0x38, 0xeb, 0x24};
+
+uint8_t broadcastAddress[] = {0xa0, 0x85, 0xe3, 0xe7, 0x4b, 0x68};
+uint8_t broadcastAddress1[] = {0xa0, 0x85, 0xe3, 0xe6, 0x56, 0x1c}; // ESP1
+uint8_t broadcastAddress2[] = {0xa0, 0x85, 0xe3, 0xe0, 0xa2, 0x88}; //Master Device
+uint8_t broadcastAddress3[] = {0x48, 0xca, 0x43, 0xaf, 0x28, 0x2c}; //ESP2
 
  struct_message MidiReading;
 // typedef struct struct_message{
@@ -146,10 +148,10 @@ void initESP_NOW(){
   // Set up a peer device (receiver's MAC address required)
   //Number 1 Peer
   
-  // addPeer(broadcastAddress);
-  // addPeer(broadcastAddress1);
-  // addPeer(broadcastAddress2);
-  addPeer(broadcastAddress3);
+  addPeer(broadcastAddress);
+   addPeer(broadcastAddress1);
+  //addPeer(broadcastAddress2);
+   addPeer(broadcastAddress3);
 
    
 }

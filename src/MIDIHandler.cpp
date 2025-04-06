@@ -42,7 +42,7 @@ void processMIDI(uint8_t *data, size_t length) {
 
 
         //ESP Send Message
-        //  esp_err_t result = esp_now_send(0, (uint8_t*)&MidiReading, sizeof(MidiReading));
+        esp_err_t result = esp_now_send(0, (uint8_t*)&MidiReading, sizeof(MidiReading));
 
         // publishMIDI(midiString);
         
