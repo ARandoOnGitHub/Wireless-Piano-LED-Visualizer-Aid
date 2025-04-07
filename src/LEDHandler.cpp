@@ -71,9 +71,25 @@ void lightUpLEDBluetooth(uint8_t note, uint8_t velocity){
   }
 
   FastLED.show();
+}
 
+void lightUpLEDespNow(uint8_t note, uint8_t velocity){
+  if (note < 21 || note > 108) return;
+
+  int ledIndex = keyLEDStart[note - 21];
+  //Original LED color
+  // CHSV color = CHSV(noteToColor[note - 21], 255, map(velocity, 0, 127, 0, BRIGHTNESS));
+  CHSV color = CHSV(ESPHUE, 255, map(velocity, 0, 127, 0, EspBrightness));
+  leds[ledIndex] = color;
+  if (isWhiteKey(note) && ledIndex + 1 < NUM_LEDS) {
+    leds[ledIndex + 1] = color;
+  }
+
+  FastLED.show();
 
 }
+
+
 void turnOffLED(uint8_t note) {
   if (note < 21 || note > 108) return;
 

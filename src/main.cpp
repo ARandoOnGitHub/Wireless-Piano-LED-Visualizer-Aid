@@ -8,8 +8,6 @@
 #include "Website.hpp"
 
 
-bool usbHandled = false;
-bool usbSetup=false; 
 
 static void sendESP32Log(const String& message) {
   Serial.print(message); // Print message to Serial
@@ -25,10 +23,12 @@ void setup() {
 
   // Give USB some time to initialize (especially if you're using TinyUSB MIDI)
   //ESP_Now setup
-    initESP_NOW();
+   initESP_NOW();
    readMacAddress();
   // Bluetooth setup 
+  if(BlueBool){
   bluetoothSetup();
+  }
   WebsiteSetup();
 
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);

@@ -89,7 +89,7 @@ void onDataReceive(const uint8_t *mac_addr, const uint8_t *data, int len) {
 
             } else {
                  Serial.println("USB MIDI IN: NOTE ON Pitch: " + String(MidiReading.channel) + " Velocity: " + String(MidiReading.value));
-                lightUpLED(MidiReading.channel, MidiReading.value);
+                 lightUpLEDespNow(MidiReading.channel, MidiReading.value);
                 Serial.printf("Time Received: "); 
         
              
@@ -139,7 +139,7 @@ void initESP_NOW(){
     Serial.println("Error initializing ESP-NOW");
     return;
   }
-   esp_now_register_recv_cb(esp_now_recv_cb_t(onDataReceive));
+  esp_now_register_recv_cb(esp_now_recv_cb_t(onDataReceive));
   esp_now_register_send_cb(OnDataSent);
 
   // Set up a peer device (receiver's MAC address required)

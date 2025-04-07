@@ -15,6 +15,9 @@ IPAddress subnet(255, 255, 255, 0);
  uint8_t currentBrightness=200;
  uint8_t bluetoothHue=0;
  uint8_t bluetoothBrightness=0;
+ uint8_t ESPHUE=0;
+ uint8_t EspBrightness=0;
+ bool BlueBool;
 
 const char* PARAM_INPUT_1 = "output";
 const char* PARAM_INPUT_2 = "state";
@@ -240,6 +243,11 @@ String processor(const String& var){
     }
   }
   
+bool stringToBool(String value) {
+    value.toLowerCase(); // Make comparison case-insensitive
+    return value == "1" || value == "true" || value == "yes" || value == "on";
+  }
+  
 void WebsiteSetup() {
   
   pinMode(2, OUTPUT);
@@ -319,26 +327,26 @@ void WebsiteSetup() {
         } else if (params[i] == "bright") {
           newBrightness = constrain(value.toInt(), 0, 255);  // Ensure safe brightness
         } else if (params[i] == "bluetooth") {
-          BluetoothBool = (value == "1" || value == "true");
-      } else if (params[i] == "virtual") {
+          BluetoothBool = stringToBool(value);
+        } else if (params[i] == "virtual") {
         Virtual = (value == "1" || value == "true");
-    }else if (params[i] == "publish") {
+        } else if (params[i] == "publish") {
       Publish = value;
-    } else if (params[i] == "subscribe") {
+        } else if (params[i] == "subscribe") {
       Subscribe = value;
-    }else if (params[i] == "mac") {
+        } else if (params[i] == "mac") {
         macESP = (value == "1" || value == "true");
-    } else if (params[i] == "macone") {
+        } else if (params[i] == "macone") {
         macAddress1 = value;
-      }else if (params[i] == "mactwo") {
+        } else if (params[i] == "mactwo") {
         macAddress2 = value;
-      }else if (params[i] == "macthree") {
+        } else if (params[i] == "macthree") {
         macAddress3 = value;
-      } else if (params[i] == "incominghue") {
+        } else if (params[i] == "incominghue") {
         espHue = constrain(value.toInt(), 0, 255);  
-      }
+        }
 
-      
+ 
     }
     
       // Apply updates *after* parsing all params
@@ -346,6 +354,9 @@ void WebsiteSetup() {
       currentBrightness = newBrightness;
       bluetoothHue=BlueHue;
       bluetoothBrightness=newBrightness;
+      ESPHUE=espHue;
+      EspBrightness=newBrightness;
+      BlueBool=BluetoothBool;
       // Handle background LED logic
       for (int i = 0; i <= 86; i++) {
         if (backgroundEnabled) {

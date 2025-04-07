@@ -13,5 +13,6 @@ void bluetoothSetup();
 
 void ScanNearby();
 
+extern bool BlueBool;
 
 #endif

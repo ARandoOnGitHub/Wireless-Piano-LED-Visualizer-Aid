@@ -21,9 +21,13 @@ extern uint8_t currentBrightness;
 extern uint8_t bluetoothHue;
 extern uint8_t bluetoothBrightness;
 
+extern uint8_t ESPHUE;
+extern uint8_t EspBrightness;
+
 void setupLEDMapping();
 void lightUpLED(uint8_t note, uint8_t velocity);
 void lightUpLEDBluetooth(uint8_t note, uint8_t velocity);
+void lightUpLEDespNow(uint8_t note, uint8_t velocity);
 void turnOffLED(uint8_t note);
 
 
