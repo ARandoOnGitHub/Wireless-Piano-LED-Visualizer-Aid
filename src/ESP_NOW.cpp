@@ -1,9 +1,7 @@
 #include "ESP_NOW.hpp"
 #include "LEDHandler.hpp"
 
-unsigned long startTime_ESP;
-unsigned long receiveTime_ESP;
-unsigned long currentTime_ESP;
+
 
 String readMacAddress() {
   uint8_t baseMac[6];
@@ -21,9 +19,9 @@ String readMacAddress() {
 }
 
 
-uint8_t broadcastAddress[] = {0xa0, 0x85, 0xe3, 0xe7, 0x4b, 0x68};
+// uint8_t broadcastAddress[] = {0xa0, 0x85, 0xe3, 0xe7, 0x4b, 0x68};
 uint8_t broadcastAddress1[] = {0xa0, 0x85, 0xe3, 0xe6, 0x56, 0x1c}; // ESP1
-uint8_t broadcastAddress2[] = {0xa0, 0x85, 0xe3, 0xe0, 0xa2, 0x88}; //Master Device
+// uint8_t broadcastAddress2[] = {0xa0, 0x85, 0xe3, 0xe0, 0xa2, 0x88}; //Master Device
 uint8_t broadcastAddress3[] = {0x48, 0xca, 0x43, 0xaf, 0x28, 0x2c}; //ESP2
 
  struct_message MidiReading;
@@ -53,7 +51,7 @@ uint8_t broadcastAddress3[] = {0x48, 0xca, 0x43, 0xaf, 0x28, 0x2c}; //ESP2
 
 
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
-  startTime_ESP=millis();
+
   char macStr[18];
   Serial.print("Packet from: ");
 
@@ -63,13 +61,12 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
   Serial.print(macStr);
   Serial.print(" send status:\t");
   Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Success" : "Delivery Fail");
-  Serial.print("Time Sent: "); 
-  Serial.println(startTime_ESP);
+
+
 }
 
 void onDataReceive(const uint8_t *mac_addr, const uint8_t *data, int len) {
-  currentTime_ESP=millis();
-  receiveTime_ESP=millis();
+
     memcpy(&MidiReading, data, sizeof(MidiReading));
 
    
@@ -88,13 +85,13 @@ void onDataReceive(const uint8_t *mac_addr, const uint8_t *data, int len) {
                 Serial.println("USB MIDI IN: NOTE OFF Pitch: " + String(MidiReading.channel) + " Velocity: " + String(MidiReading.value));
                  turnOffLED(MidiReading.channel);
                  Serial.printf("Time Received: "); 
-                 Serial.println(receiveTime_ESP);
+             
 
             } else {
                  Serial.println("USB MIDI IN: NOTE ON Pitch: " + String(MidiReading.channel) + " Velocity: " + String(MidiReading.value));
                 lightUpLED(MidiReading.channel, MidiReading.value);
                 Serial.printf("Time Received: "); 
-                Serial.println(receiveTime_ESP);
+        
              
             }
             break;
@@ -117,7 +114,7 @@ void onDataReceive(const uint8_t *mac_addr, const uint8_t *data, int len) {
         break;
       
     }
-    receiveTime_ESP=currentTime_ESP;
+
 }
 
 
@@ -148,7 +145,7 @@ void initESP_NOW(){
   // Set up a peer device (receiver's MAC address required)
   //Number 1 Peer
   
-  addPeer(broadcastAddress);
+  // addPeer(broadcastAddress);
    addPeer(broadcastAddress1);
   //addPeer(broadcastAddress2);
    addPeer(broadcastAddress3);

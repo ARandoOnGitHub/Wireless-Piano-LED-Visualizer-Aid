@@ -20,10 +20,10 @@ void setup() {
   Serial.begin(115200);
   Serial.println("Booting up!");
 
-  setupUSB();
+  
+  setupUSB(); 
 
-  // Serial.print("[DEFAULT] ESP32 Board MAC Address: ");
-  // setupAP();
+  // Give USB some time to initialize (especially if you're using TinyUSB MIDI)
   //ESP_Now setup
     initESP_NOW();
    readMacAddress();
@@ -43,7 +43,7 @@ void setup() {
   //MQTT setup
   //setUpMqtt(); 
 
-
+  setupUSB();
 
 }
 

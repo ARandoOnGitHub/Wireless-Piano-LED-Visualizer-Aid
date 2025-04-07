@@ -18,9 +18,12 @@ extern uint8_t noteToColor[88];
 extern uint8_t currentHue;
 extern uint8_t currentBrightness;
 
+extern uint8_t bluetoothHue;
+extern uint8_t bluetoothBrightness;
 
 void setupLEDMapping();
 void lightUpLED(uint8_t note, uint8_t velocity);
+void lightUpLEDBluetooth(uint8_t note, uint8_t velocity);
 void turnOffLED(uint8_t note);
 
 

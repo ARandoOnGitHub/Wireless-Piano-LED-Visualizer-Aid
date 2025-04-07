@@ -8,13 +8,13 @@
 // const char* PASSword = "divinelight18";
 
 IPAddress local_IP(192, 168, 5, 245); 
-IPAddress gateway(192, 168, 255, 255);
+IPAddress gateway(192, 168, 2, 255);
 IPAddress subnet(255, 255, 255, 0);
 
- uint8_t currentHue=29;
- uint8_t currentBrightness=20;
-
-
+ uint8_t currentHue=0;
+ uint8_t currentBrightness=200;
+ uint8_t bluetoothHue=0;
+ uint8_t bluetoothBrightness=0;
 
 const char* PARAM_INPUT_1 = "output";
 const char* PARAM_INPUT_2 = "state";
@@ -177,10 +177,12 @@ const char index_html[] PROGMEM = R"rawliteral(
         const sat = document.getElementById('saturation').value;
         const bright = document.getElementById('brightness').value;
         const mode = document.getElementById('mode').value;
-  
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", `/led?hue=${hue}&sat=${sat}&bright=${bright}&mode=${mode}`, true);
-        xhr.send();
+        
+       const mac = document.getElementById('macDisplay').innerText.replace("MAC: ", "");
+
+     const xhr = new XMLHttpRequest();
+     xhr.open("GET", `/led?hue=${hue}&sat=${sat}&bright=${bright}&mode=${mode}&mac=${mac}`, true);
+      xhr.send();
       }
 
       function fetchNearbyDevices() {
@@ -246,16 +248,23 @@ void WebsiteSetup() {
   digitalWrite(4, LOW);
   pinMode(33, OUTPUT);
   digitalWrite(33, LOW);
-  
+
+
+
   setupAP();
-  WiFi.config(local_IP, gateway, subnet);
-  WiFi.begin();
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.println("Connecting to WiFi..");
+  WiFi.mode(WIFI_STA);
+  WiFi.config(local_IP, gateway, subnet);  // MUST be before begin()
+  WiFi.begin(WiFi.SSID().c_str(), WiFi.psk().c_str());
+
+
+  if (WiFi.status() == WL_CONNECTED) {
+    Serial.println("\nConnected!");
+    Serial.print("IP Address: ");
+    Serial.println(WiFi.localIP());
+  } else {
+    Serial.println("\nFailed to connect. Restarting...");
+    // ESP.restart();
   }
-  Serial.println("Connected!");
-  Serial.println(WiFi.localIP());
   if (MDNS.begin("PianoVisualizer")) {
     Serial.println("Access your ESP32 at: http://PianoVisualizer.local");
   }
@@ -274,7 +283,7 @@ void WebsiteSetup() {
     });
 
     server.on("/send", HTTP_GET, [](AsyncWebServerRequest *request) {
-      String params[] = {"background", "ledmode", "animmode", "yourhue", "bluehue", "bright", "bluetooth"};
+      String params[] = {"background", "ledmode", "animmode", "yourhue", "bluehue", "bright", "bluetooth","macone", "mac", "mactwo","macthree", "incominghue","publish","virtual","subscribe"};
       bool backgroundEnabled = false;
     
       // Local vars to safely handle updates before any LED activity
@@ -283,7 +292,16 @@ void WebsiteSetup() {
       int newHue = currentHue;
       int newBrightness = currentBrightness;
       int BlueHue=1; 
+      int espHue=1; 
+      String macAddress1="";
+      String macAddress2="";
+      String macAddress3="";
+      String Publish="";
+      String Subscribe="";
       bool BluetoothBool; 
+      bool macESP; 
+      bool Virtual; 
+
     
       for (int i = 0; i < sizeof(params) / sizeof(params[0]); i++) {
         if (!request->hasParam(params[i])) continue;
@@ -295,19 +313,39 @@ void WebsiteSetup() {
         }  else if (params[i] == "animmode") {
           animMode = value;
         } else if (params[i] == "yourhue") {
-          newHue = constrain(value.toInt(), 0, 255);  // Ensure safe hue
+          newHue = constrain(value.toInt(), 0, 255);  
         } else if (params[i] == "bluehue") {
-          BlueHue = constrain(value.toInt(), 0, 255);  // Ensure safe brightness
+          BlueHue = constrain(value.toInt(), 0, 255);  
         } else if (params[i] == "bright") {
           newBrightness = constrain(value.toInt(), 0, 255);  // Ensure safe brightness
         } else if (params[i] == "bluetooth") {
           BluetoothBool = (value == "1" || value == "true");
+      } else if (params[i] == "virtual") {
+        Virtual = (value == "1" || value == "true");
+    }else if (params[i] == "publish") {
+      Publish = value;
+    } else if (params[i] == "subscribe") {
+      Subscribe = value;
+    }else if (params[i] == "mac") {
+        macESP = (value == "1" || value == "true");
+    } else if (params[i] == "macone") {
+        macAddress1 = value;
+      }else if (params[i] == "mactwo") {
+        macAddress2 = value;
+      }else if (params[i] == "macthree") {
+        macAddress3 = value;
+      } else if (params[i] == "incominghue") {
+        espHue = constrain(value.toInt(), 0, 255);  
       }
+
+      
+    }
     
       // Apply updates *after* parsing all params
       currentHue = newHue;
       currentBrightness = newBrightness;
-    
+      bluetoothHue=BlueHue;
+      bluetoothBrightness=newBrightness;
       // Handle background LED logic
       for (int i = 0; i <= 86; i++) {
         if (backgroundEnabled) {
@@ -316,7 +354,7 @@ void WebsiteSetup() {
           turnOffLED(i);
         }
       }
-    }
+    
     
       // Respond once, at the end
       String response = "Data received:\n";
@@ -326,7 +364,15 @@ void WebsiteSetup() {
       response += "Bluetooth Hue: " + String(BlueHue) + "\n";
       response += "Brightness: " + String(currentBrightness) + "\n";
       response += "Bluetooth On: " + String(BluetoothBool) + "\n";
-    
+      response += "Mac On: " + String(macESP) + "\n";
+      response += "Virtual On: " + String(Virtual) + "\n";
+      response += "Publish " + Publish + "\n";
+      response += "Subcribe " + Subscribe + "\n";
+      response += "Mac Address1: " + macAddress1 + "\n";
+      response += "Mac Address2: " + macAddress2 + "\n";
+      response += "Mac Address3: " + macAddress3 + "\n";
+      response += "Incoming Hue: " + String(espHue) + "\n";
+
       request->send(200, "text/plain", response);
       Serial.println(response);
       
