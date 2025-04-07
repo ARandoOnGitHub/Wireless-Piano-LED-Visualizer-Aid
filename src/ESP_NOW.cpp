@@ -89,7 +89,7 @@ void onDataReceive(const uint8_t *mac_addr, const uint8_t *data, int len) {
 
             } else {
                  Serial.println("USB MIDI IN: NOTE ON Pitch: " + String(MidiReading.channel) + " Velocity: " + String(MidiReading.value));
-                 lightUpLEDespNow(MidiReading.channel, MidiReading.value);
+                 lightUpLEDespNow(MidiReading.channel, MidiReading.value,MidiReading.hue,MidiReading.brightness);
                 Serial.printf("Time Received: "); 
         
              

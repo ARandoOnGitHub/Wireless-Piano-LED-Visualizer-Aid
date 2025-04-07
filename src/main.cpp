@@ -19,17 +19,16 @@ void setup() {
   Serial.println("Booting up!");
 
   
-  setupUSB(); 
 
   // Give USB some time to initialize (especially if you're using TinyUSB MIDI)
   //ESP_Now setup
    initESP_NOW();
-   readMacAddress();
+   //readMacAddress();
   // Bluetooth setup 
-  if(BlueBool){
-  bluetoothSetup();
-  }
-  WebsiteSetup();
+
+ // bluetoothSetup();
+  
+   WebsiteSetup();
 
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS);
@@ -41,7 +40,7 @@ void setup() {
 
   setupLEDMapping();
   //MQTT setup
-  //setUpMqtt(); 
+  // setUpMqtt(); 
 
   setupUSB();
 
@@ -52,7 +51,7 @@ void loop() {
     handleUSB();
  
 
- // loopMqtt();
+  // loopMqtt();
   // sendESP32Log();
   // Serial.println(message);
 }

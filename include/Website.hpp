@@ -10,7 +10,6 @@
 #include <WebSockets.h>
 #include <ESPmDNS.h>
 
-
 String scanNearbyDevices();
 String processor(const String& var);
 

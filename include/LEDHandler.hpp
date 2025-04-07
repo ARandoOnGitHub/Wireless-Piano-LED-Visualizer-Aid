@@ -27,8 +27,8 @@ extern uint8_t EspBrightness;
 void setupLEDMapping();
 void lightUpLED(uint8_t note, uint8_t velocity);
 void lightUpLEDBluetooth(uint8_t note, uint8_t velocity);
-void lightUpLEDespNow(uint8_t note, uint8_t velocity);
-void turnOffLED(uint8_t note);
+void lightUpLEDespNow(uint8_t note, uint8_t velocity,uint8_t hue, uint8_t brightness);
+void turnOffLED(uint8_t note); 
 
 
 #endif // LEDHANDLER_HPP

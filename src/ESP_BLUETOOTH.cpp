@@ -10,7 +10,9 @@ void onNoteOn(uint8_t channel, uint8_t note, uint8_t velocity, uint16_t timestam
 {
   startTime=millis();
   Serial.printf("Received note on : channel %d, note %d, velocity %d (timestamp %dms)\n", channel, note, velocity, timestamp);
+
   lightUpLEDBluetooth(note,velocity); 
+  
   Serial.printf("Start Time Start: ");
   Serial.println(startTime);
   //  MidiReading.channel= note; 

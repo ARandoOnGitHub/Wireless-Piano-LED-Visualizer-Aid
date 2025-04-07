@@ -20,7 +20,7 @@ PubSubClient client(espClient);
 void setupWiFi() {
   delay(10);
   Serial.println("Connecting to WiFi...");
-  //WiFi.begin(ssid, password);
+  WiFi.begin(ssid, password);
 
   //Serial.println(ssid);
   while (WiFi.status() != WL_CONNECTED) {
@@ -100,8 +100,8 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 void setUpMqtt(){
 
-  setupWiFi();
-  client.setServer(mqttServer, mqttPort);
+ setupWiFi();
+ client.setServer(mqttServer, mqttPort);
  client.setCallback(callback);
 
 }

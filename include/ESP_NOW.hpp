@@ -5,7 +5,7 @@
 #include <WiFi.h>
 #include <esp_wifi.h>
 #include <esp_now.h>
-
+#include "esp_wifi.h"
 
 extern uint8_t broadcastAddress[];
 
@@ -13,8 +13,9 @@ typedef  struct struct_message {
     uint8_t channel;
     uint8_t value;
     uint8_t statusByte;
-    // uint8_t cableNumber;
-    
+    uint8_t cableNumber;
+    uint8_t hue; 
+    uint8_t brightness;
     
     
 } struct_message;

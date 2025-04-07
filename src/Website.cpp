@@ -8,15 +8,15 @@
 // const char* PASSword = "divinelight18";
 
 IPAddress local_IP(192, 168, 5, 245); 
-IPAddress gateway(192, 168, 2, 255);
+IPAddress gateway(192, 168, 5, 245);
 IPAddress subnet(255, 255, 255, 0);
 
- uint8_t currentHue=0;
- uint8_t currentBrightness=200;
- uint8_t bluetoothHue=0;
- uint8_t bluetoothBrightness=0;
- uint8_t ESPHUE=0;
- uint8_t EspBrightness=0;
+ uint8_t currentHue=80;
+ uint8_t currentBrightness=100;
+ uint8_t bluetoothHue=80;
+ uint8_t bluetoothBrightness=100;
+ uint8_t ESPHUE=80;
+ uint8_t EspBrightness=100;
  bool BlueBool;
 
 const char* PARAM_INPUT_1 = "output";
@@ -26,20 +26,14 @@ const char* PARAM_INPUT_2 = "state";
 AsyncWebServer server(80);
 
 
+
 void setupAP(){
-  WiFiManager wm;
-  WiFi.mode(WIFI_STA);
-  bool res;
-  res = wm.autoConnect("AutoConnectAP");
-  
-  if(!res) {
-    Serial.println("Failed to connect");
-    // ESP.restart();
-} 
-else {
-    //if you get here you have connected to the WiFi    
-    Serial.println("connected...yeey :)");
-}
+  WiFi.softAPConfig(local_IP, gateway, subnet);
+
+  WiFi.softAP("Piano Visualizer", "piano123");
+  WiFi.setSleep(false);
+  Serial.print("AP IP address: ");
+  Serial.println(WiFi.softAPIP());
 
 }
 
@@ -260,19 +254,19 @@ void WebsiteSetup() {
 
 
   setupAP();
-  WiFi.mode(WIFI_STA);
-  WiFi.config(local_IP, gateway, subnet);  // MUST be before begin()
-  WiFi.begin(WiFi.SSID().c_str(), WiFi.psk().c_str());
+  // WiFi.mode(WIFI_STA);
+  // WiFi.config(local_IP, gateway, subnet);  // MUST be before begin()
+  // WiFi.begin(WiFi.SSID().c_str(), WiFi.psk().c_str());
 
 
-  if (WiFi.status() == WL_CONNECTED) {
-    Serial.println("\nConnected!");
-    Serial.print("IP Address: ");
-    Serial.println(WiFi.localIP());
-  } else {
-    Serial.println("\nFailed to connect. Restarting...");
-    // ESP.restart();
-  }
+  // if (WiFi.status() == WL_CONNECTED) {
+  //   Serial.println("\nConnected!");
+  //   Serial.print("IP Address: ");
+  //   Serial.println(WiFi.localIP());
+  // } else {
+  //   Serial.println("\nFailed to connect. Restarting...");
+  //   // ESP.restart();
+  // }
   if (MDNS.begin("PianoVisualizer")) {
     Serial.println("Access your ESP32 at: http://PianoVisualizer.local");
   }
@@ -356,6 +350,9 @@ void WebsiteSetup() {
       bluetoothBrightness=newBrightness;
       ESPHUE=espHue;
       EspBrightness=newBrightness;
+      MidiReading.hue=ESPHUE;
+      MidiReading.brightness=EspBrightness;
+      esp_now_send(0, (uint8_t *)&MidiReading, sizeof(MidiReading));
       BlueBool=BluetoothBool;
       // Handle background LED logic
       for (int i = 0; i <= 86; i++) {
