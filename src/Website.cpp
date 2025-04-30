@@ -8,8 +8,8 @@
 // const char* PASSword = "divinelight18";
 
 IPAddress local_IP(192, 168, 5, 245); 
-IPAddress gateway(192, 168, 5, 245);
-IPAddress subnet(255, 255, 255, 0);
+IPAddress gateway (192, 168, 5, 245);
+IPAddress subnet  (255, 255, 255, 0);
 
  uint8_t currentHue=80;
  uint8_t currentBrightness=100;
@@ -352,7 +352,7 @@ void WebsiteSetup() {
       EspBrightness=newBrightness;
       MidiReading.hue=ESPHUE;
       MidiReading.brightness=EspBrightness;
-      esp_now_send(0, (uint8_t *)&MidiReading, sizeof(MidiReading));
+      esp_err_t result = esp_now_send(0, (uint8_t *)&MidiReading, sizeof(MidiReading));
       BlueBool=BluetoothBool;
       // Handle background LED logic
       for (int i = 0; i <= 86; i++) {

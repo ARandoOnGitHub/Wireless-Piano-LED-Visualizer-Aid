@@ -19,10 +19,10 @@ String readMacAddress() {
 }
 
 
-// uint8_t broadcastAddress[] = {0xa0, 0x85, 0xe3, 0xe7, 0x4b, 0x68};
-uint8_t broadcastAddress1[] = {0xa0, 0x85, 0xe3, 0xe6, 0x56, 0x1c}; // ESP1
-// uint8_t broadcastAddress2[] = {0xa0, 0x85, 0xe3, 0xe0, 0xa2, 0x88}; //Master Device
-uint8_t broadcastAddress3[] = {0x48, 0xca, 0x43, 0xaf, 0x28, 0x2c}; //ESP2
+ uint8_t broadcastAddress[] = {0x24, 0xec, 0x4a, 0x38, 0xeb, 0x24}; 
+ //uint8_t broadcastAddress1[] = {0xa0, 0x85, 0xe3, 0xe6, 0x56, 0x1c}; // ESP Demo
+ uint8_t broadcastAddress2[] = {0xa0, 0x85, 0xe3, 0xe0, 0xa2, 0x88}; //Master Device
+ //uint8_t broadcastAddress3[] = {0xa0, 0x85, 0xe3, 0xe7, 0x4b, 0x68}; //ESP Relben
 
  struct_message MidiReading;
 // typedef struct struct_message{
@@ -145,10 +145,10 @@ void initESP_NOW(){
   // Set up a peer device (receiver's MAC address required)
   //Number 1 Peer
   
-  // addPeer(broadcastAddress);
-   addPeer(broadcastAddress1);
-  //addPeer(broadcastAddress2);
-   addPeer(broadcastAddress3);
+   addPeer(broadcastAddress);
+   //addPeer(broadcastAddress1);
+   //addPeer(broadcastAddress2);
+   //addPeer(broadcastAddress3);
 
    
 }

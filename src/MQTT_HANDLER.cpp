@@ -6,9 +6,9 @@
 #include "LEDHandler.hpp"
 
 
-const char* ssid = "MyOptimum 744650";
-const char* password = "1935-silver-84";
-const char* mqttServer = "test.mosquitto.org";  //other broker: test.mosquitto.org, broker.emqx.io, 	broker.hivemq.com
+const char* ssid = "DJ";
+const char* password = "daejung123";
+const char* mqttServer = "broker.hivemq.com";  //other broker: test.mosquitto.org, broker.emqx.io, 	broker.hivemq.com
 const int mqttPort = 1883;
 char clientID[30];
 
@@ -39,8 +39,8 @@ void reconnect() {
     Serial.println(clientID);
     if (client.connect(clientID)) {
       Serial.println("Connected!");
-         //client.subscribe("midi/topic",0);  
-          client.subscribe("test/topic",0); // Subscribe to test topic
+         client.subscribe("midi/topic",0);  
+        //client.subscribe("test/topic",0); // Subscribe to test topic
     } else {
       Serial.print("Failed, rc=");
       Serial.print(client.state());
@@ -52,8 +52,8 @@ void reconnect() {
 // Publish Simple Message 
 void publishMIDI(String MidiMessage) {
   
- client.publish("midi/topic", MidiMessage.c_str(),false);
- // client.publish("test/topic", MidiMessage.c_str(),false);
+// client.publish("midi/topic", MidiMessage.c_str(),false);
+  client.publish("test/topic", MidiMessage.c_str(),false);
   Serial.println("Published: " + String(MidiMessage));
  
 }
