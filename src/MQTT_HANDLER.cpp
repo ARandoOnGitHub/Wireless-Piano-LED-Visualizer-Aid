@@ -6,8 +6,8 @@
 #include "LEDHandler.hpp"
 
 
-const char* ssid = "DJ";
-const char* password = "daejung123";
+//const char* ssid = "Doris's iPhone";
+//const char* password = "dorritoss";
 const char* mqttServer = "broker.hivemq.com";  //other broker: test.mosquitto.org, broker.emqx.io, 	broker.hivemq.com
 const int mqttPort = 1883;
 char clientID[30];
@@ -17,7 +17,7 @@ PubSubClient client(espClient);
 
   struct_MQTT midiReadingMqtt; 
 
-void setupWiFi() {
+/*void setupWiFi() {
   delay(10);
   Serial.println("Connecting to WiFi...");
   WiFi.begin(ssid, password);
@@ -28,7 +28,7 @@ void setupWiFi() {
     Serial.println("Connecting...");
   }
   Serial.println("WiFi connected!");
-}
+}*/
 
 void reconnect() {
   while (!client.connected()) {
@@ -100,7 +100,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 void setUpMqtt(){
 
- setupWiFi();
+ //setupWiFi();
  client.setServer(mqttServer, mqttPort);
  client.setCallback(callback);
 

@@ -8,7 +8,8 @@
 #include <WiFi.h>
 
 //MQTT CLIENT//
-
+extern const char* ssid;
+extern const char* password;
 
 void setupWifi(); 
 void reconnect(); 

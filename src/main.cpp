@@ -18,8 +18,6 @@ void setup() {
   Serial.begin(115200);
   Serial.println("Booting up!");
 
-  
-
   // Give USB some time to initialize (especially if you're using TinyUSB MIDI)
   //ESP_Now setup
   // initESP_NOW();
@@ -27,8 +25,13 @@ void setup() {
   // Bluetooth setup 
 
  //bluetoothSetup();
+  WiFiManager wm;
+  if (!wm.autoConnect("Piano_Visualizer", "piano123")) {
+    Serial.println("Failed to connect.");
+    ESP.restart();
+  }
   
-    // WebsiteSetup();
+    WebsiteSetup();
 
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS);
