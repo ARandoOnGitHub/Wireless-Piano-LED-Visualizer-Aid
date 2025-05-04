@@ -24,5 +24,6 @@ extern bool sendMidiUpdate;
 void WebsiteSetup();
 void setupAP();
 void setupOnboardLED();
+void flashOnboardLED(uint8_t hue, uint8_t brightness);
 
 #endif 

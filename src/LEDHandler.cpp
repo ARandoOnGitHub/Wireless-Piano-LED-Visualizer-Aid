@@ -1,4 +1,5 @@
 #include "LEDHandler.hpp"
+#include "Website.hpp"
 
 CRGB leds[NUM_LEDS];
 int keyLEDStart[NUM_KEYS];
@@ -55,6 +56,7 @@ void lightUpLED(uint8_t note, uint8_t velocity) {
   }
 
   FastLED.show();
+  flashOnboardLED(currentHue, currentBrightness);
 }
 
 void lightUpLEDBluetooth(uint8_t note, uint8_t velocity){
@@ -71,6 +73,7 @@ void lightUpLEDBluetooth(uint8_t note, uint8_t velocity){
   }
 
   FastLED.show();
+  flashOnboardLED(bluetoothHue, currentBrightness);
 }
 
 void lightUpLEDespNow(uint8_t note, uint8_t velocity, uint8_t hue, uint8_t brightness){
@@ -86,7 +89,7 @@ void lightUpLEDespNow(uint8_t note, uint8_t velocity, uint8_t hue, uint8_t brigh
   }
 
   FastLED.show();
-
+  flashOnboardLED(hue, brightness);
 }
 
 

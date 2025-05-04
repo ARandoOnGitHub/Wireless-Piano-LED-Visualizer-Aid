@@ -32,6 +32,9 @@ void setupOnboardLED() {
 void flashOnboardLED(uint8_t hue, uint8_t brightness) {
   onboardLed[0] = CHSV(hue, 255, brightness);
   FastLED.show();
+  delay(500);
+  onboardLed[0] = CRGB::Black;  // turn it off
+  FastLED.show();
 }
 
 //
@@ -111,8 +114,8 @@ void handleSendRequest(AsyncWebServerRequest *request) {
   //noInterrupts();
   currentHue = newHue;
   currentBrightness = newBrightness;
-  Serial.println("Received new hue/brightness from website:");
-  Serial.printf("Hue: %d, Brightness: %d\n", newHue, newBrightness);
+  //Serial.println("Received new hue/brightness from website:");
+  //Serial.printf("Hue: %d, Brightness: %d\n", newHue, newBrightness);
   bluetoothHue = blueHue;
   bluetoothBrightness = newBrightness;
   ESPHUE = espHue;
@@ -120,7 +123,9 @@ void handleSendRequest(AsyncWebServerRequest *request) {
   BlueBool = bluetoothOn;
   MidiReading.hue = ESPHUE;
   MidiReading.brightness = EspBrightness;
-  flashOnboardLED(currentHue, EspBrightness);//was originally ESPHUE
+  flashOnboardLED(currentHue, newBrightness);
+  flashOnboardLED(ESPHUE, newBrightness);
+  flashOnboardLED(bluetoothHue, newBrightness);
   //interrupts();
 
   esp_err_t result = esp_now_send(0, (uint8_t *)&MidiReading, sizeof(MidiReading));
@@ -129,14 +134,15 @@ void handleSendRequest(AsyncWebServerRequest *request) {
   String response = "{\n";
   response += "  \"hue\": " + String(currentHue) + ",\n";
   response += "  \"brightness\": " + String(currentBrightness) + ",\n";
+  response += "  \"bluehue\": " + String(bluetoothHue) + ",\n";
   response += "  \"bluetooth\": " + String(bluetoothOn ? "true" : "false") + ",\n";
   response += "  \"espHue\": " + String(ESPHUE) + "\n";
   response += "}";
 
   request->send(200, "application/json", response);
-  lightUpLED(60, 100);  // Show the new color
-  delay(300);
-  turnOffLED(60);       // Then turn it off
+  //lightUpLED(60, 100);  // Show the new color
+  //delay(300);
+  //turnOffLED(60);       // Then turn it off
   Serial.println(response);
 }
 

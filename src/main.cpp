@@ -25,7 +25,7 @@ void setup() {
   // readMacAddress();
   // Bluetooth setup 
 
- //bluetoothSetup();
+  bluetoothSetup();
   WiFiManager wm;
   if (!wm.autoConnect("Piano_Visualizer", "piano123")) {
     Serial.println("Failed to connect.");
@@ -40,7 +40,7 @@ void setup() {
 
 
   FastLED.addLeds<WS2812B, ONBOARD_LED_PIN, GRB>(onboardLed, 1);
-  FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
+  //FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS); // Optional: for uniform brightness
 
   for (int i = 0; i < NUM_LEDS; i++) {

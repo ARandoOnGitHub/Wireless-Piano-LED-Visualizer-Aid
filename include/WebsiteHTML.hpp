@@ -39,15 +39,15 @@ const char index_html[] PROGMEM = R"rawliteral(
     input[type=range] {
       width: 80%;
       margin-top: 10px;
-      height: 20px;
+      height: 25px;
       -webkit-appearance: none;
       background: transparent;
     }
 
     input[type=range]::-webkit-slider-thumb {
       -webkit-appearance: none;
-      height: 25px;
-      width: 25px;
+      height: 20px;
+      width: 20px;
       border-radius: 50%;
       background: #ffffff;
       cursor: pointer;
@@ -59,7 +59,11 @@ const char index_html[] PROGMEM = R"rawliteral(
       height: 10px;
       border-radius: 5px;
     }
-
+    #bluehue::-webkit-slider-runnable-track {
+      background: linear-gradient(to right, red, yellow, lime, cyan, blue, magenta, red);
+      height: 10px;
+      border-radius: 5px;
+    }
     #bright::-webkit-slider-runnable-track {
       background: linear-gradient(to right, black, white);
       height: 10px;
@@ -98,8 +102,14 @@ const char index_html[] PROGMEM = R"rawliteral(
   </div>
 
   <div class="slider-section">
+    <div id="bluetoothPreview" class="color-preview"></div>
+    <label for="bluehue">Bluetooth Hue</label><br>
+    <input type="range" id="bluehue" min="0" max="255" value="0" oninput="updateColor()">
+  </div>
+
+  <div class="slider-section">
     <label for="bright">Brightness</label><br>
-    <input type="range" id="bright" min="0" max="255" value="100" oninput="updateColor()">
+    <input type="range" id="bright" min="0" max="255" value="150" oninput="updateColor()">
   </div>
 
   <button onclick="sendUpdate()">Submit</button>
@@ -115,22 +125,25 @@ const char index_html[] PROGMEM = R"rawliteral(
     function updateColor() {
       const hue = document.getElementById('hue').value;
       const incoming = document.getElementById('incominghue').value;
+      const bluetooth = document.getElementById('bluehue').value;
       const bright = document.getElementById('bright').value;
 
       const lightness = Math.round((bright / 255) * 50 + 25); // scale 0–255 to ~25–75% lightness
 
       document.getElementById('yourPreview').style.backgroundColor = `hsl(${hue}, 100%, ${lightness}%)`;
       document.getElementById('incomingPreview').style.backgroundColor = `hsl(${incoming}, 100%, ${lightness}%)`;
+      document.getElementById('bluetoothPreview').style.backgroundColor = `hsl(${bluetooth}, 100%, ${lightness})`;
     }
 
 
     function sendUpdate() {
       const hue = document.getElementById('hue').value;
       const incominghue = document.getElementById('incominghue').value;
+      const bluehue = document.getElementById('bluehue').value;
       const bright = document.getElementById('bright').value;
 
       const xhr = new XMLHttpRequest();
-      xhr.open("GET", `/send?hue=${hue}&incominghue=${incominghue}&bright=${bright}`, true);
+      xhr.open("GET", `/send?hue=${hue}&incominghue=${incominghue}&bluehue=${bluehue}&bright=${bright}`, true);
       xhr.send();
     }
 
