@@ -2,90 +2,161 @@
 #define WEBSITE_HTML_HPP
 
 const char index_html[] PROGMEM = R"rawliteral(
-  <!DOCTYPE html>
-  <html>
-    <head>
-      <title>Piano Visualizer</title>
-      <style>
-        body { font-family: Arial, sans-serif; background-color: #111; color: #eee; text-align: center; }
-        .slider-container { margin: 20px auto; width: 80%; }
-        input[type=range] { width: 70%; }
-        label { display: block; margin-top: 10px; font-size: 18px; }
-        .color-preview {
-          display: inline-block;
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          margin-left: 15px;
-          border: 1px solid white;
-        }
-        button {
-          padding: 10px 20px;
-          font-size: 16px;
-          margin-top: 20px;
-          background-color: #444;
-          color: white;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-        }
-        button:hover {
-          background-color: #666;
-        }
-      </style>
-    </head>
-    <body>
-      <h1>Piano Visualizer Control</h1>
-  
-      <div class="slider-container">
-        <label for="hueSlider">Hue</label>
-        <input type="range" id="hueSlider" min="0" max="255" value="80" oninput="updatePreview()">
-        <span class="color-preview" id="huePreview"></span>
-  
-        <label for="brightnessSlider">Brightness</label>
-        <input type="range" id="brightnessSlider" min="0" max="255" value="100" oninput="updatePreview()">
-        <span class="color-preview" id="brightnessPreview"></span>
-      </div>
-  
-      <button onclick="submitChanges()">Submit</button>
-  
-      <script>
-        function hsvToRgb(h, s, v) {
-          let f = (n, k = (n + h / 60) % 6) =>
-            v - v * s * Math.max(Math.min(k, 4 - k, 1), 0);
-          let r = Math.round(f(5) * 255);
-          let g = Math.round(f(3) * 255);
-          let b = Math.round(f(1) * 255);
-          return `rgb(${r}, ${g}, ${b})`;
-        }
-  
-        function updatePreview() {
-          let hue = parseInt(document.getElementById("hueSlider").value);
-          let brightness = parseInt(document.getElementById("brightnessSlider").value);
-  
-          let color = hsvToRgb((hue / 255) * 360, 1, brightness / 255);
-          document.getElementById("huePreview").style.backgroundColor = color;
-          document.getElementById("brightnessPreview").style.backgroundColor = color;
-        }
-  
-        function submitChanges() {
-          var hue = document.getElementById("hueSlider").value;
-          var brightness = document.getElementById("brightnessSlider").value;
-  
-          var url = `/send?hue=${hue}&bright=${brightness}`;
-  
-          fetch(url)
-            .then(response => response.json())
-            .then(data => console.log("Success:", data))
-            .catch(error => console.error("Error:", error));
-        }
-  
-        window.onload = updatePreview;
-      </script>
-    </body>
-  </html>
-  )rawliteral";
-  
-  
+<!DOCTYPE html><html>
+<head>
+  <title>Piano Visualizer Controller</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #ffffff;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h2 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    .slider-section {
+      margin-bottom: 40px;
+    }
+
+    .color-preview {
+      width: 100px;
+      height: 100px;
+      margin: 10px auto 10px;
+      border-radius: 50%;
+      border: 2px solid white;
+    }
+
+    label {
+      font-size: 1.2rem;
+    }
+
+    input[type=range] {
+      width: 80%;
+      margin-top: 10px;
+      height: 20px;
+      -webkit-appearance: none;
+      background: transparent;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 25px;
+      width: 25px;
+      border-radius: 50%;
+      background: #ffffff;
+      cursor: pointer;
+    }
+
+    #hue::-webkit-slider-runnable-track,
+    #incominghue::-webkit-slider-runnable-track {
+      background: linear-gradient(to right, red, yellow, lime, cyan, blue, magenta, red);
+      height: 10px;
+      border-radius: 5px;
+    }
+
+    #bright::-webkit-slider-runnable-track {
+      background: linear-gradient(to right, black, white);
+      height: 10px;
+      border-radius: 5px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h2>Piano Visualizer Controller</h2>
+
+  <div class="slider-section">
+    <div id="yourPreview" class="color-preview"></div>
+    <label for="hue">Your Hue</label><br>
+    <input type="range" id="hue" min="0" max="255" value="0" oninput="updateColor()">
+  </div>
+
+  <div class="slider-section">
+    <div id="incomingPreview" class="color-preview"></div>
+    <label for="incominghue">Incoming Hue</label><br>
+    <input type="range" id="incominghue" min="0" max="255" value="0" oninput="updateColor()">
+  </div>
+
+  <div class="slider-section">
+    <label for="bright">Brightness</label><br>
+    <input type="range" id="bright" min="0" max="255" value="100" oninput="updateColor()">
+  </div>
+
+  <button onclick="sendUpdate()">Submit</button>
+
+  <div style="margin-top: 50px;">
+    <h3>Nearby ESP32 Devices</h3>
+    <pre id="deviceList">Scanning...</pre>
+    <button onclick="fetchNearbyDevices()">Rescan</button>
+    <div class="mac-address" id="macDisplay">MAC: Loading...</div>
+  </div>
+
+  <script>
+    function updateColor() {
+      const hue = document.getElementById('hue').value;
+      const incoming = document.getElementById('incominghue').value;
+      const bright = document.getElementById('bright').value;
+
+      const lightness = Math.round((bright / 255) * 50 + 25); // scale 0–255 to ~25–75% lightness
+
+      document.getElementById('yourPreview').style.backgroundColor = `hsl(${hue}, 100%, ${lightness}%)`;
+      document.getElementById('incomingPreview').style.backgroundColor = `hsl(${incoming}, 100%, ${lightness}%)`;
+    }
+
+
+    function sendUpdate() {
+      const hue = document.getElementById('hue').value;
+      const incominghue = document.getElementById('incominghue').value;
+      const bright = document.getElementById('bright').value;
+
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", `/send?hue=${hue}&incominghue=${incominghue}&bright=${bright}`, true);
+      xhr.send();
+    }
+
+    function fetchMacAddress() {
+      fetch("/mac")
+        .then(response => response.text())
+        .then(mac => {
+          document.getElementById("macDisplay").innerText = `MAC: ${mac}`;
+        });
+    }
+
+    function fetchNearbyDevices() {
+      fetch("/scan")
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById("deviceList").innerText = data;
+        });
+    }
+
+    window.onload = () => {
+      updateColor();
+      fetchMacAddress();
+    };
+  </script>
+</body>
+</html>
+)rawliteral";
 
 #endif

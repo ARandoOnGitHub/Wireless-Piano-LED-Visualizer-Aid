@@ -9,6 +9,10 @@
 #include <ESPAsyncWebServer.h>
 #include <WebSockets.h>
 #include <ESPmDNS.h>
+#include <FastLED.h>
+
+#define ONBOARD_LED_PIN 48
+extern CRGB onboardLed[1];
 
 String scanNearbyDevices();
 String processor(const String& var);

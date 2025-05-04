@@ -22,7 +22,7 @@ const char* PARAM_INPUT_2 = "state";
 AsyncWebServer server(80);
 
 //
-#define ONBOARD_LED_PIN 48
+
 CRGB onboardLed[1];
 
 void setupOnboardLED() {
@@ -120,7 +120,7 @@ void handleSendRequest(AsyncWebServerRequest *request) {
   BlueBool = bluetoothOn;
   MidiReading.hue = ESPHUE;
   MidiReading.brightness = EspBrightness;
-  flashOnboardLED(ESPHUE, EspBrightness);
+  flashOnboardLED(currentHue, EspBrightness);//was originally ESPHUE
   //interrupts();
 
   esp_err_t result = esp_now_send(0, (uint8_t *)&MidiReading, sizeof(MidiReading));
@@ -134,9 +134,9 @@ void handleSendRequest(AsyncWebServerRequest *request) {
   response += "}";
 
   request->send(200, "application/json", response);
- //lightUpLED(60, 100);  // Show the new color
-  //delay(300);
-  //turnOffLED(60);       // Then turn it off
+  lightUpLED(60, 100);  // Show the new color
+  delay(300);
+  turnOffLED(60);       // Then turn it off
   Serial.println(response);
 }
 
