@@ -7,6 +7,7 @@
 #include "MQTTHandler.hpp"
 #include "Website.hpp"
 
+bool sendMidiUpdate = false;
 
 
 static void sendESP32Log(const String& message) {
@@ -31,7 +32,12 @@ void setup() {
     ESP.restart();
   }
   
-    WebsiteSetup();
+  delay(500);  // give time for WiFi to stabilize
+  Serial.println("WiFi connected. Starting web server...");
+  WebsiteSetup();  // ✅ Only start after config portal exits
+  Serial.print("ESP Local IP: ");
+  Serial.println(WiFi.localIP());
+
 
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS);
@@ -46,6 +52,7 @@ void setup() {
   setUpMqtt(); 
 
   setupUSB();
+  setupOnboardLED();
 
 }
 
@@ -57,4 +64,10 @@ void loop() {
    loopMqtt();
   // sendESP32Log();
   // Serial.println(message);
+  /*if (sendMidiUpdate) {
+    esp_err_t result = esp_now_send(0, (uint8_t *)&MidiReading, sizeof(MidiReading));
+    Serial.println(result == ESP_OK ? "ESP-NOW sent successfully" : "ESP-NOW send failed!");
+    sendMidiUpdate = false;
+  }*/
+  
 }

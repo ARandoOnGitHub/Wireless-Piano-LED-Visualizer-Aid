@@ -15,8 +15,10 @@ String processor(const String& var);
 
 String outputState(int output);
 
+extern bool sendMidiUpdate;
+
 void WebsiteSetup();
 void setupAP();
-
+void setupOnboardLED();
 
 #endif 
