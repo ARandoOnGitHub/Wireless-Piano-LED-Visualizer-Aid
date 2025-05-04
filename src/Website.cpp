@@ -8,11 +8,11 @@ IPAddress local_IP(192, 168, 5, 245);
 IPAddress gateway(192, 168, 5, 245);
 IPAddress subnet(255, 255, 255, 0);
 
-uint8_t currentHue=80;
+uint8_t currentHue=85;//was 80
 uint8_t currentBrightness=100;
-uint8_t bluetoothHue=80;
+uint8_t bluetoothHue=170;
 uint8_t bluetoothBrightness=100;
-uint8_t ESPHUE=80;
+uint8_t ESPHUE=14;
 uint8_t EspBrightness=100;
 bool BlueBool = false;
 
@@ -123,9 +123,9 @@ void handleSendRequest(AsyncWebServerRequest *request) {
   BlueBool = bluetoothOn;
   MidiReading.hue = ESPHUE;
   MidiReading.brightness = EspBrightness;
-  flashOnboardLED(currentHue, newBrightness);
-  flashOnboardLED(ESPHUE, newBrightness);
-  flashOnboardLED(bluetoothHue, newBrightness);
+  //flashOnboardLED(currentHue, newBrightness);
+  //flashOnboardLED(ESPHUE, newBrightness);
+  //flashOnboardLED(bluetoothHue, newBrightness);
   //interrupts();
 
   esp_err_t result = esp_now_send(0, (uint8_t *)&MidiReading, sizeof(MidiReading));
@@ -140,9 +140,15 @@ void handleSendRequest(AsyncWebServerRequest *request) {
   response += "}";
 
   request->send(200, "application/json", response);
-  //lightUpLED(60, 100);  // Show the new color
-  //delay(300);
-  //turnOffLED(60);       // Then turn it off
+  lightUpLED(60, 100);  // Show the new color
+  delay(100);
+  turnOffLED(60);
+  lightUpLEDespNow(60, 100, ESPHUE, EspBrightness); // Show the new color
+  delay(100);
+  turnOffLED(60);
+  lightUpLEDBluetooth(60, 100); // Show the new color
+  delay(100);
+  turnOffLED(60);       // Then turn it off
   Serial.println(response);
 }
 

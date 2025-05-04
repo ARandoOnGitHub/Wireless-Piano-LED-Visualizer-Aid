@@ -115,25 +115,34 @@ const char index_html[] PROGMEM = R"rawliteral(
   <button onclick="sendUpdate()">Submit</button>
 
   <div style="margin-top: 50px;">
-    <h3>Nearby ESP32 Devices</h3>
-    <pre id="deviceList">Scanning...</pre>
-    <button onclick="fetchNearbyDevices()">Rescan</button>
+    <h3>Current ESP32 Device</h3>
     <div class="mac-address" id="macDisplay">MAC: Loading...</div>
   </div>
 
   <script>
-    function updateColor() {
-      const hue = document.getElementById('hue').value;
-      const incoming = document.getElementById('incominghue').value;
-      const bluetooth = document.getElementById('bluehue').value;
-      const bright = document.getElementById('bright').value;
+    function hsvToCssHsl(h, s, v) {
+      let scaledHue = Math.round((h / 255) * 360);  // Fix for correct preview hue!
 
-      const lightness = Math.round((bright / 255) * 50 + 25); // scale 0–255 to ~25–75% lightness
+      s /= 255;
+      v /= 255;
 
-      document.getElementById('yourPreview').style.backgroundColor = `hsl(${hue}, 100%, ${lightness}%)`;
-      document.getElementById('incomingPreview').style.backgroundColor = `hsl(${incoming}, 100%, ${lightness}%)`;
-      document.getElementById('bluetoothPreview').style.backgroundColor = `hsl(${bluetooth}, 100%, ${lightness})`;
+      let l = v * (1 - s / 2);
+      let ss = (l === 0 || l === 1) ? 0 : (v - l) / Math.min(l, 1 - l);
+
+      return `hsl(${scaledHue}, ${Math.round(ss * 100)}%, ${Math.round(l * 100)}%)`;
     }
+
+    function updateColor() {
+      const hue = parseInt(document.getElementById('hue').value);
+      const incoming = parseInt(document.getElementById('incominghue').value);
+      const bluetooth = parseInt(document.getElementById('bluehue').value);
+      const bright = parseInt(document.getElementById('bright').value);
+
+      document.getElementById("yourPreview").style.backgroundColor = hsvToCssHsl(hue, 255, bright);
+      document.getElementById("incomingPreview").style.backgroundColor = hsvToCssHsl(incoming, 255, bright);
+      document.getElementById("bluetoothPreview").style.backgroundColor = hsvToCssHsl(bluetooth, 255, bright);
+    }
+
 
 
     function sendUpdate() {
