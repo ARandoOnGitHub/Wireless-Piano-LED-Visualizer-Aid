@@ -32,7 +32,8 @@ void setupOnboardLED() {
 void flashOnboardLED(uint8_t hue, uint8_t brightness) {
   onboardLed[0] = CHSV(hue, 255, brightness);
   FastLED.show();
-  delay(500);
+  // delay(500);
+  
   onboardLed[0] = CRGB::Black;  // turn it off
   FastLED.show();
 }
@@ -96,18 +97,23 @@ void handleSendRequest(AsyncWebServerRequest *request) {
 
   if (request->hasParam("hue")) {
     newHue = constrain(request->getParam("hue")->value().toInt(), 0, 255);
+    // printf("Hue: %d\n", newHue);
   }
   if (request->hasParam("bright")) {
     newBrightness = constrain(request->getParam("bright")->value().toInt(), 0, 255);
+    // printf("Brightness: %d\n", newBrightness);
   }
   if (request->hasParam("bluehue")) {
     blueHue = constrain(request->getParam("bluehue")->value().toInt(), 0, 255);
+    // printf("Bluetooth Hue: %d\n", blueHue);
   }
   if (request->hasParam("incominghue")) {
     espHue = constrain(request->getParam("incominghue")->value().toInt(), 0, 255);
+    // printf("ESP Hue: %d\n", espHue);
   }
   if (request->hasParam("bluetooth")) {
     bluetoothOn = stringToBool(request->getParam("bluetooth")->value());
+    // printf("Bluetooth: %s\n", bluetoothOn ? "true" : "false");
   }
 
   // Apply updates (with concurrency safety in mind)
@@ -140,15 +146,35 @@ void handleSendRequest(AsyncWebServerRequest *request) {
   response += "}";
 
   request->send(200, "application/json", response);
-  lightUpLED(60, 100);  // Show the new color
-  delay(100);
-  turnOffLED(60);
-  lightUpLEDespNow(60, 100, ESPHUE, EspBrightness); // Show the new color
-  delay(100);
-  turnOffLED(60);
-  lightUpLEDBluetooth(60, 100); // Show the new color
-  delay(100);
-  turnOffLED(60);       // Then turn it off
+  for (int i = 0; i < NUM_LEDS; i++) {
+    lightUpLED(i, 100);  // Show the new color
+  }
+  // lightUpLED(60, 100);  // Show the new color
+  delay(500);
+  for (int i = 0; i < NUM_LEDS; i++) {
+    turnOffLED(i);  // Show the new color
+  }
+  // turnOffLED(60);
+  for (int i = 0; i < NUM_LEDS; i++) {
+    lightUpLEDBluetooth(i, 100);  // Show the new color
+  }
+  for (int i = 0; i < NUM_LEDS; i++) {
+    turnOffLED(i);  // Show the new color
+  }
+
+  for (int i = 0; i < NUM_LEDS; i++) {
+    lightUpLEDespNow(i, 100, ESPHUE, EspBrightness);  // Show the new color
+  }
+
+  for (int i = 0; i < NUM_LEDS; i++) {
+    turnOffLED(i);  // Show the new color
+  }
+  // lightUpLEDespNow(60, 100, ESPHUE, EspBrightness); // Show the new color
+  // delay(500);
+  // turnOffLED(60);
+  // lightUpLEDBluetooth(60, 100); // Show the new color
+  // delay(500);
+  // turnOffLED(60);       // Then turn it off
   Serial.println(response);
 }
 

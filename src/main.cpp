@@ -39,8 +39,8 @@ void setup() {
   Serial.println(WiFi.localIP());
 
 
-  FastLED.addLeds<WS2812B, ONBOARD_LED_PIN, GRB>(onboardLed, 1);
-  //FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
+  // FastLED.addLeds<WS2812B, ONBOARD_LED_PIN, GRB>(onboardLed, 1);
+  FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS); // Optional: for uniform brightness
 
   for (int i = 0; i < NUM_LEDS; i++) {
@@ -53,7 +53,7 @@ void setup() {
   setUpMqtt(); 
 
   setupUSB();
-  setupOnboardLED();
+  // setupOnboardLED();
 
 }
 

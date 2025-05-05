@@ -27,11 +27,12 @@ void onNoteOff(uint8_t channel, uint8_t note, uint8_t velocity, uint16_t timesta
   currentTime=millis();
   Serial.printf("Received note off : channel %d, note %d, velocity %d (timestamp %dms)\n", channel, note, velocity, timestamp);
   turnOffLED(note);
-  Serial.printf("Time Stamp: ");
-  Serial.println(currentTime);
+  // Serial.printf("Time Stamp: ");
+  // Serial.println(currentTime);
   unsigned long delay= currentTime-startTime; 
-  Serial.printf("Delay: ");
-  Serial.println(delay);
+  // Serial.printf("Delay: ");
+  // Serial.println(delay);
+  printf("\tTime Stamp: %lu\n \t Delay: %lu\n", currentTime, delay);
 
   startTime=currentTime;
 
