@@ -43,13 +43,13 @@ void setupLEDMapping() {
 }
 
 
-void lightUpLED(uint8_t note, uint8_t velocity) {
+void lightUpLED(uint8_t note, uint8_t velocity, uint8_t saturation) {
   if (note < 21 || note > 108) return;
 
   int ledIndex = keyLEDStart[note - 21];
   //Original LED color
   // CHSV color = CHSV(noteToColor[note - 21], 255, map(velocity, 0, 127, 0, BRIGHTNESS));
-  CHSV color = CHSV(currentHue, 255, map(velocity, 0, 127, 0, currentBrightness));
+  CHSV color = CHSV(currentHue, saturation, map(velocity, 0, 127, 0, currentBrightness));
   leds[ledIndex] = color;
   if (isWhiteKey(note) && ledIndex + 1 < NUM_LEDS) {
     leds[ledIndex + 1] = color;
@@ -59,14 +59,14 @@ void lightUpLED(uint8_t note, uint8_t velocity) {
   flashOnboardLED(currentHue, currentBrightness);
 }
 
-void lightUpLEDBluetooth(uint8_t note, uint8_t velocity){
+void lightUpLEDBluetooth(uint8_t note, uint8_t velocity, uint8_t saturation) {
 
   if (note < 21 || note > 108) return;
 
   int ledIndex = keyLEDStart[note - 21];
   //Original LED color
   // CHSV color = CHSV(noteToColor[note - 21], 255, map(velocity, 0, 127, 0, BRIGHTNESS));
-  CHSV color = CHSV(bluetoothHue, 255, map(velocity, 0, 127, 0, bluetoothBrightness));
+  CHSV color = CHSV(bluetoothHue, saturation, map(velocity, 0, 127, 0, bluetoothBrightness));
   leds[ledIndex] = color;
   if (isWhiteKey(note) && ledIndex + 1 < NUM_LEDS) {
     leds[ledIndex + 1] = color;
@@ -76,13 +76,13 @@ void lightUpLEDBluetooth(uint8_t note, uint8_t velocity){
   flashOnboardLED(bluetoothHue, currentBrightness);
 }
 
-void lightUpLEDespNow(uint8_t note, uint8_t velocity, uint8_t hue, uint8_t brightness){
+void lightUpLEDespNow(uint8_t note, uint8_t velocity, uint8_t hue, uint8_t brightness, uint8_t saturation) {
   if (note < 21 || note > 108) return;
 
   int ledIndex = keyLEDStart[note - 21];
   //Original LED color
   // CHSV color = CHSV(noteToColor[note - 21], 255, map(velocity, 0, 127, 0, BRIGHTNESS));
-  CHSV color = CHSV(hue, 255, map(velocity, 0, 127, 0, brightness));
+  CHSV color = CHSV(hue, saturation, map(velocity, 0, 127, 0, brightness));
   leds[ledIndex] = color;
   if (isWhiteKey(note) && ledIndex + 1 < NUM_LEDS) {
     leds[ledIndex + 1] = color;

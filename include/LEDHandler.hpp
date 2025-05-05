@@ -25,9 +25,9 @@ extern uint8_t ESPHUE;
 extern uint8_t EspBrightness;
 
 void setupLEDMapping();
-void lightUpLED(uint8_t note, uint8_t velocity);
-void lightUpLEDBluetooth(uint8_t note, uint8_t velocity);
-void lightUpLEDespNow(uint8_t note, uint8_t velocity,uint8_t hue, uint8_t brightness);
+void lightUpLED(uint8_t note, uint8_t velocity, uint8_t saturation = 255);
+void lightUpLEDBluetooth(uint8_t note, uint8_t velocity, uint8_t saturation = 255);
+void lightUpLEDespNow(uint8_t note, uint8_t velocity,uint8_t hue, uint8_t brightness, uint8_t saturation = 255);
 void turnOffLED(uint8_t note); 
 
 
