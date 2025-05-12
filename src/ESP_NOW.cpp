@@ -1,8 +1,6 @@
 #include "ESP_NOW.hpp"
 #include "LEDHandler.hpp"
 
-
-
 String readMacAddress() {
   uint8_t baseMac[6];
   esp_err_t ret = esp_wifi_get_mac(WIFI_IF_STA, baseMac);
@@ -17,7 +15,6 @@ String readMacAddress() {
     return "Error";
   }
 }
-
 
  uint8_t broadcastAddress[] = {0x24, 0xec, 0x4a, 0x38, 0xeb, 0x24}; 
  //uint8_t broadcastAddress1[] = {0xa0, 0x85, 0xe3, 0xe6, 0x56, 0x1c}; // ESP Demo
@@ -61,18 +58,11 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
   Serial.print(macStr);
   Serial.print(" send status:\t");
   Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Success" : "Delivery Fail");
-
-
 }
 
 void onDataReceive(const uint8_t *mac_addr, const uint8_t *data, int len) {
 
     memcpy(&MidiReading, data, sizeof(MidiReading));
-
-   
-   
-   
-
     switch ( MidiReading.statusByte & 0xF0) {
         case 0x80: // Note Off
             Serial.println("USB MIDI IN: NOTE OFF Pitch: " + String(MidiReading.channel) + " Velocity: " + String(MidiReading.value));
@@ -85,17 +75,13 @@ void onDataReceive(const uint8_t *mac_addr, const uint8_t *data, int len) {
                 Serial.println("USB MIDI IN: NOTE OFF Pitch: " + String(MidiReading.channel) + " Velocity: " + String(MidiReading.value));
                  turnOffLED(MidiReading.channel);
                  Serial.printf("Time Received: "); 
-             
-
-            } else {
+            } 
+            else {
                  Serial.println("USB MIDI IN: NOTE ON Pitch: " + String(MidiReading.channel) + " Velocity: " + String(MidiReading.value));
                  lightUpLEDespNow(MidiReading.channel, MidiReading.value,MidiReading.hue,MidiReading.brightness);
-                Serial.printf("Time Received: "); 
-        
-             
+                Serial.printf("Time Received: ");              
             }
             break;
-
         case 0xB0:
             switch (MidiReading.channel) {
                 case 64: // Sustain Pedal
@@ -107,16 +93,12 @@ void onDataReceive(const uint8_t *mac_addr, const uint8_t *data, int len) {
                 case 66: // Sostenuto Pedal
                      Serial.println("USB MIDI IN: Sostenuto Pedal CC " + String(MidiReading.channel) + " Velocity: " + String(MidiReading.value));
                     break;
-               
             }
             break;
         default:  Serial.println("UNKOWN MIDI DATA " + String(MidiReading.channel) + " Velocity: " + String(MidiReading.value));
-        break;
-      
+        break; 
     }
-
 }
-
 
 void addPeer(const uint8_t *peerAddr) {
   esp_now_peer_info_t newPeer = {};
@@ -131,10 +113,7 @@ void addPeer(const uint8_t *peerAddr) {
   }
 }
 void initESP_NOW(){
-  
   WiFi.mode(WIFI_STA);
-  
-
      if (esp_now_init() != ESP_OK) {
     Serial.println("Error initializing ESP-NOW");
     return;

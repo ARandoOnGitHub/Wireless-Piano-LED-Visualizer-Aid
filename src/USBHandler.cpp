@@ -30,8 +30,6 @@ static void midi_transfer_cb(usb_transfer_t *transfer) {
         if ((p[i] + p[i + 1] + p[i + 2] + p[i + 3]) == 0) break;
         ESP_LOGI("", "midi: %02x %02x %02x %02x",
                  p[i], p[i + 1], p[i + 2], p[i + 3]);
-                 
-
       
       processMIDI(transfer->data_buffer, transfer->actual_num_bytes);
       usb_host_transfer_submit(transfer);

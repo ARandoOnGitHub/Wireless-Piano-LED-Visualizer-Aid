@@ -37,38 +37,24 @@ void setup() {
   WebsiteSetup();  // ✅ Only start after config portal exits
   Serial.print("ESP Local IP: ");
   Serial.println(WiFi.localIP());
-
-
   // FastLED.addLeds<WS2812B, ONBOARD_LED_PIN, GRB>(onboardLed, 1);
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS); // Optional: for uniform brightness
-
   for (int i = 0; i < NUM_LEDS; i++) {
     leds[i] = CRGB::Black;
   }
   FastLED.show();
-
   setupLEDMapping();
   //MQTT setup
   setUpMqtt(); 
-
   setupUSB();
   // setupOnboardLED();
-
 }
 
 void loop() {
-  
-    handleUSB();
- 
-
-   loopMqtt();
+  handleUSB();
+  loopMqtt();
   // sendESP32Log();
   // Serial.println(message);
-  /*if (sendMidiUpdate) {
-    esp_err_t result = esp_now_send(0, (uint8_t *)&MidiReading, sizeof(MidiReading));
-    Serial.println(result == ESP_OK ? "ESP-NOW sent successfully" : "ESP-NOW send failed!");
-    sendMidiUpdate = false;
-  }*/
   
 }

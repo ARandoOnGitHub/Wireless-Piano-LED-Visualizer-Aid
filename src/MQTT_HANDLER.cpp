@@ -1,13 +1,10 @@
-//MQTT
-
 #include "MQTTHandler.hpp"
 #include "MIDIHandler.hpp"
 #include "ESP_NOW.hpp"
 #include "LEDHandler.hpp"
 
-
-//const char* ssid = "Doris's iPhone";
-//const char* password = "dorritoss";
+//const char* ssid = ""; //wifi name here
+//const char* password = ""; //wifi password
 const char* mqttServer = "broker.hivemq.com";  //other broker: test.mosquitto.org, broker.emqx.io, 	broker.hivemq.com
 const int mqttPort = 1883;
 char clientID[30];
@@ -16,19 +13,6 @@ WiFiClient espClient;
 PubSubClient client(espClient);
 
   struct_MQTT midiReadingMqtt; 
-
-/*void setupWiFi() {
-  delay(10);
-  Serial.println("Connecting to WiFi...");
-  WiFi.begin(ssid, password);
-
-  //Serial.println(ssid);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.println("Connecting...");
-  }
-  Serial.println("WiFi connected!");
-}*/
 
 void reconnect() {
   while (!client.connected()) {

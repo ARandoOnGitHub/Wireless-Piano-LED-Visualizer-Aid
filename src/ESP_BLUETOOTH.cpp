@@ -18,8 +18,6 @@ void onNoteOn(uint8_t channel, uint8_t note, uint8_t velocity, uint16_t timestam
   //  MidiReading.channel= note; 
   //  MidiReading.value= velocity; 
   //  esp_err_t result = esp_now_send(0, (uint8_t*)&MidiReading, sizeof(MidiReading));
-  
-
 }
 
 void onNoteOff(uint8_t channel, uint8_t note, uint8_t velocity, uint16_t timestamp)
@@ -32,11 +30,8 @@ void onNoteOff(uint8_t channel, uint8_t note, uint8_t velocity, uint16_t timesta
   unsigned long delay= currentTime-startTime; 
   // Serial.printf("Delay: ");
   // Serial.println(delay);
-  
   printf("\tTime Stamp: %lu\n \t Delay: %lu\n", currentTime, delay);
-
   startTime=currentTime;
-
   //   MidiReading.channel= note; 
   //  esp_err_t result = esp_now_send(0, (uint8_t*)&MidiReading, sizeof(MidiReading));
 }
@@ -45,12 +40,10 @@ void onControlChange(uint8_t channel, uint8_t controller, uint8_t value, uint16_
 {
     Serial.printf("Received control change : channel %d, controller %d, value %d (timestamp %dms)\n", channel, controller, value, timestamp);
 }
-
 void connected()
 {
   Serial.println("Connected");
 }
-
 void bluetoothSetup(){
 
 BLEMidiServer.begin("MIDI device");
@@ -62,12 +55,8 @@ BLEMidiServer.begin("MIDI device");
   BLEMidiServer.setNoteOffCallback(onNoteOff);
   BLEMidiServer.setControlChangeCallback(onControlChange);
   BLEMidiServer.enableDebugging();
- 
-
 }
 
 void scanNearby(){
-
-
   
 }
